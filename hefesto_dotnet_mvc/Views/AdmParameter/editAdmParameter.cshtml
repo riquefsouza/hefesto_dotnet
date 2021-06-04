@@ -1,0 +1,91 @@
+@using hefesto.admin.Models
+
+@model AdmParameter
+
+@{
+    ViewData["Title"] = "List";
+}
+
+<!-- =================================================================================== -->
+
+<form id="formEditAdmParameter" style="padding: 5px;" asp-action="Save">
+
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <input type="hidden" asp-for="Id" />
+
+    <div class="card">
+        <div class="card-header"
+             style="font-weight: bold;font-size: large;">
+            <span th:text="#{editAdmParameter.title}" th:remove="tag"></span>
+        </div>
+        <div class="card-body">
+            <div class="form-actions">
+                <button type="submit" class="btn btn-success" id="btnSave">
+                    <span class="icon text-white-50">
+                        <i class="fa fa-check-circle"></i>
+                    </span>
+                    <span class="text" th:text="#{button.save}"></span>
+                </button>
+
+                <button type="reset" class="btn btn-light" id="btnReset">
+                    <span class="icon text-gray-600">
+                        <i class="fa fa-eraser"></i>
+                    </span>
+                    <span class="text" th:text="#{button.reset}"></span>
+                </button>
+
+                <button type="button" class="btn btn-primary" id="btnCancel">
+                    <span class="icon text-white-50">
+                        <i class="fa fa-times-circle"></i>
+                    </span>
+                    <span class="text" th:text="#{button.cancel}"></span>
+                </button>
+            </div>
+            <div class="row">
+                <div class="col-md-4 form-group mb-2">
+                    <input type="hidden" id="admParameter_id" th:field="*{id}" />
+
+                    <label asp-for="IdParameterCategory">@ViewData["editAdmParameter.category"]</label>
+                    <select asp-for="IdParameterCategory" class="form-select">
+                        @foreach (var itemCategory in (IEnumerable<AdmParameterCategory>)@ViewData["listAdmCategories"])
+                        {
+                        <option value="@itemCategory.Id"
+                                selected="@((IEnumerable<AdmParameterCategory>)ViewData["listAdmCategories"]).Contains(@Model.AdmParameterCategory,itemCategory)">
+                            @itemCategory.Description
+                        </option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4 form-group mb-2">
+                    <label asp-for="Code">@ViewData["editAdmParameter.code"]</label>
+                    <input type="text" class="form-control" asp-for="Code" maxlength="64" required="required" />
+                    <span asp-validation-for="Code" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-8 form-group mb-2">
+                    <label asp-for="Value">@ViewData["editAdmParameter.value"]</label>
+                    <textarea class="form-control" asp-for="Value" rows="6" maxlength="4000" required="required">
+						</textarea>
+                    <span asp-validation-for="Value" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 form-group mb-2">
+                    <label asp-for="Description">@ViewData["editAdmParameter.description"]</label>
+                    <input type="text" class="form-control" asp-for="Description" maxlength="255" required="required" />
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <br>
+    <br>
+</form>
+
+<script src="~/static/js/admin/admParameter/editAdmParameter.js"></script>
+
+<!-- =================================================================================== -->

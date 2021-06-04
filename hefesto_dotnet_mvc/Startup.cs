@@ -13,6 +13,7 @@ using hefesto.admin.Models;
 using hefesto.admin.Services;
 using hefesto.base_hefesto.Services;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Razor;
 
 namespace hefesto_dotnet_mvc
 {
@@ -51,6 +52,12 @@ namespace hefesto_dotnet_mvc
             });
 
             services.AddControllersWithViews();
+
+            services.AddLocalization(options => options.ResourcesPath = "Resources");
+
+            services.AddMvc()
+                .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
+                .AddDataAnnotationsLocalization();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -66,6 +73,15 @@ namespace hefesto_dotnet_mvc
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+            var supportedCultures = new[] { "pt-BR", "en-US" };
+            var localizationOptions = new RequestLocalizationOptions{ ApplyCurrentCultureToResponseHeaders = true }
+                .SetDefaultCulture(supportedCultures[0])
+                .AddSupportedCultures(supportedCultures)
+                .AddSupportedUICultures(supportedCultures);
+
+            app.UseRequestLocalization(localizationOptions);
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 

@@ -73,6 +73,8 @@ class HFSSystemUtil {
 	{
 		this._url = window.location.href;
 		//this._urlServer = $("meta[name='URL-SERVER']").attr("content");
+
+		this.dataTablesLanguageURL = '/static/js/hfsframework/dataTables.pt_br.json';
 		
 		this._anchorHomePage = $('#anchorHomePage');
 

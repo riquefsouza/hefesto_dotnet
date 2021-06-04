@@ -32,8 +32,7 @@ namespace hefesto_dotnet_webapi.admin.Controllers
         public async Task<ActionResult<IEnumerable<AdmParameter>>> listPaged([FromQuery] PaginationFilter filter)
         {
             var route = Request.Path.Value;
-            var pagedData = await _service.GetPage(route, filter);
-            _service.SetTransient(pagedData.page);
+            var pagedData = await _service.GetPage(route, filter);           
             return Ok(pagedData);
         }
 
@@ -41,8 +40,7 @@ namespace hefesto_dotnet_webapi.admin.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<AdmParameter>>> GetAdmParameters()
         {
-            var listAdmParameter = await _context.AdmParameters.ToListAsync();
-            _service.SetTransient(listAdmParameter);
+            var listAdmParameter = await _service.FindAll();
             return listAdmParameter;
         }
 
@@ -50,13 +48,11 @@ namespace hefesto_dotnet_webapi.admin.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<AdmParameter>> GetAdmParameter(long id)
         {
-            var admParameter = await _context.AdmParameters.FindAsync(id);
+            var admParameter = await _service.FindById(id);
 
             if (admParameter == null)
             {
                 return NotFound();
-            } else {
-                _service.SetTransient(admParameter);
             }
 
             return admParameter;
@@ -72,22 +68,11 @@ namespace hefesto_dotnet_webapi.admin.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(admParameter).State = EntityState.Modified;
+            var updated = await _service.Update(id, admParameter);
 
-            try
+            if (!updated)
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!AdmParameterExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return NotFound();
             }
 
             return NoContent();
@@ -98,21 +83,11 @@ namespace hefesto_dotnet_webapi.admin.Controllers
         [HttpPost]
         public async Task<ActionResult<AdmParameter>> PostAdmParameter(AdmParameter admParameter)
         {
-            _context.AdmParameters.Add(admParameter);
-            try
+            var created = await _service.Insert(admParameter);
+
+            if (created == null)
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateException)
-            {
-                if (AdmParameterExists(admParameter.Id))
-                {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
+                return Conflict();
             }
 
             return CreatedAtAction("GetAdmParameter", new { id = admParameter.Id }, admParameter);
@@ -122,21 +97,18 @@ namespace hefesto_dotnet_webapi.admin.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAdmParameter(long id)
         {
-            var admParameter = await _context.AdmParameters.FindAsync(id);
-            if (admParameter == null)
+            var deleted = await _service.Delete(id);
+            if (!deleted)
             {
                 return NotFound();
             }
-
-            _context.AdmParameters.Remove(admParameter);
-            await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
         private bool AdmParameterExists(long id)
         {
-            return _context.AdmParameters.Any(e => e.Id == id);
+            return _service.Exists(id);
         }
     }
 }

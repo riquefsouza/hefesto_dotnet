@@ -26,4 +26,10 @@
     <ProjectReference Include="..\hefesto_dotnet_api\hefesto_dotnet_api.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <EmbeddedResource Update="Resources\Resources.pt-BR.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
+
 </Project>

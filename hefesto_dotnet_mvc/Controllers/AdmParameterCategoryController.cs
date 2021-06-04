@@ -9,11 +9,11 @@ using hefesto.admin.Models;
 
 namespace hefesto_dotnet_mvc.Controllers
 {
-    public class AdmParameterCategoriesController : Controller
+    public class AdmParameterCategoryController : Controller
     {
         private readonly dbhefestoContext _context;
 
-        public AdmParameterCategoriesController(dbhefestoContext context)
+        public AdmParameterCategoryController(dbhefestoContext context)
         {
             _context = context;
         }

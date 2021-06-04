@@ -15,7 +15,7 @@ class ListAdmParameter extends HFSSystemUtil {
 		this._tableList = $('#tableAdmParameter');		
 		this._dataTableList = this._tableList.DataTable( {
 	        "dom": '<"top"flp>rt<"bottom"i><"clear">',
-	        "language": { "url": '/js/hfsframework/dataTables.pt_br.json' }
+			"language": { "url": this.dataTablesLanguageURL }
 	    } );			 
 	    this._selectedRow = '#tableAdmParameter tbody tr.selected';
 		

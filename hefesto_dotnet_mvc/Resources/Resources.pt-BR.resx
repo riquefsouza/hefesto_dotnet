@@ -1,0 +1,281 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="lang.change" xml:space="preserve">
+    <value>Alterar o idioma</value>
+  </data>
+  <data name="lang.en_US" xml:space="preserve">
+    <value>Ingl\u00EAs</value>
+  </data>
+  <data name="lang.pt_BR" xml:space="preserve">
+    <value>Portugu\u00EAs</value>
+  </data>
+  <data name="main.framework" xml:space="preserve"><value>Hefesto</value></data>
+  <data name="main.app.title" xml:space="preserve"><value>System</value></data>
+  <data name="main.app.welcome" xml:space="preserve"><value>Bem-vindo ao Hefesto System.</value></data>
+  <data name="main.no.record" xml:space="preserve"><value>Nenhum registro encontrado.</value></data>
+  <data name="validator.EmptyStringValidator" xml:space="preserve"><value>O campo não pode estar vazio!</value></data>
+  <data name="message.select.table" xml:space="preserve"><value>Por favor, selecione um registro da tabela para fazer esta a\u00E7\u00E3o!</value></data>
+  <data name="alert.success" xml:space="preserve"><value>Sucesso</value></data>
+  <data name="alert.danger" xml:space="preserve"><value>Perigo</value></data>
+  <data name="alert.warning" xml:space="preserve"><value>Aviso</value></data>
+  <data name="alert.info" xml:space="preserve"><value>Informa\u00E7\u00E3o</value></data>
+  <data name="button.yes" xml:space="preserve"><value>Sim</value></data>
+  <data name="button.no" xml:space="preserve"><value>N\u00E3o</value></data>
+  <data name="button.export" xml:space="preserve"><value>Exportar</value></data>
+  <data name="button.add" xml:space="preserve"><value>Adicionar</value></data>
+  <data name="button.edit" xml:space="preserve"><value>Editar</value></data>
+  <data name="button.delete" xml:space="preserve"><value>Excluir</value></data>
+  <data name="button.back" xml:space="preserve"><value>Voltar</value></data>
+  <data name="button.save" xml:space="preserve"><value>Salvar</value></data>
+  <data name="button.reset" xml:space="preserve"><value>Limpar</value></data>
+  <data name="button.cancel" xml:space="preserve"><value>Cancelar</value></data>
+  <data name="button.send" xml:space="preserve"><value>Enviar</value></data>
+  <data name="reportTypeGroups.docs" xml:space="preserve"><value>Documentos</value></data>
+  <data name="reportTypeGroups.sheets" xml:space="preserve"><value>Planilhas</value></data>
+  <data name="reportTypeGroups.text" xml:space="preserve"><value>Texto puro</value></data>
+  <data name="reportTypeGroups.others" xml:space="preserve"><value>Outros</value></data>
+  <data name="dlgAlertMessage.text" xml:space="preserve"><value>Alerta!</value></data>
+  <data name="dlgAlertMessage.title" xml:space="preserve"><value>Alerta</value></data>
+  <data name="dlgDeleteConfirmation.text" xml:space="preserve"><value>Confirma exclus\u00E3o?</value></data>
+  <data name="dlgDeleteConfirmation.title" xml:space="preserve"><value>Confirma\u00E7\u00E3o</value></data>
+  <data name="build.version" xml:space="preserve"><value>${project.version}</value></data>
+  <data name="build.timestamp" xml:space="preserve"><value>${timestamp}</value></data>
+  <data name="login.wrongUser" xml:space="preserve"><value>Usu\u00E1rio ou senha errada!</value></data>
+  <data name="login.title" xml:space="preserve"><value>Autentique-se</value></data>
+  <data name="login.username" xml:space="preserve"><value>Usu\u00E1rio:</value></data>
+  <data name="login.username.placeholder" xml:space="preserve"><value>Informe seu nome de usu\u00E1rio </value></data>
+  <data name="login.password" xml:space="preserve"><value>Senha:</value></data>
+  <data name="login.password.placeholder" xml:space="preserve"><value>Informe sua senha</value></data>
+  <data name="login.rememberme" xml:space="preserve"><value>Lembre de mim:</value></data>
+  <data name="login.button" xml:space="preserve"><value>Entrar</value></data>
+  <data name="login.forgotPassword" xml:space="preserve"><value>Esqueceu a senha?</value></data>
+  <data name="login.becomeMember" xml:space="preserve"><value>Cadastrar-se</value></data>
+  <data name="forgotPassword.sendMail" xml:space="preserve"><value>Email enviado!</value></data>
+  <data name="forgotPassword.noSendMail" xml:space="preserve"><value>Email n\u00E3o enviado!</value></data>
+  <data name="forgotPassword.textMail" xml:space="preserve"><value>ATEN\u00C7\u00C3O: Esta \u00E9 uma notifica\u00E7\u00E3o enviada pelo sistema e n\u00E3o deve ser respondida.</value></data>
+  <data name="dlgBecomeMember.title" xml:space="preserve"><value>Seja bem vindo!</value></data>
+  <data name="dlgBecomeMember.email" xml:space="preserve"><value>E-mail:</value></data>
+  <data name="dlgBecomeMember.okSave" xml:space="preserve"><value>Bem vindo novo membro!</value></data>
+  <data name="dlgBecomeMember.noSave" xml:space="preserve"><value>Usu\u00E1rio n\u00E3o salvo!</value></data>
+  <data name="dlgBecomeMember.noRole" xml:space="preserve"><value>Papel n\u00E3o existe!</value></data>
+  <data name="changePassword.title" xml:space="preserve"><value>Alterar Senha </value></data>
+  <data name="changePassword.currentPassword" xml:space="preserve"><value>Senha atual:</value></data>
+  <data name="changePassword.newPassword" xml:space="preserve"><value>Nova senha:</value></data>
+  <data name="changePassword.confirmNewPassword" xml:space="preserve"><value>Confirme nova senha:</value></data>
+  <data name="changePassword.dlgChangePassword" xml:space="preserve"><value>Confirma Alterar Senha?</value></data>
+  <data name="dlgChangePassword.title" xml:space="preserve"><value>Confirma\u00E7\u00E3o</value></data>
+  <data name="changePasswordView.validation" xml:space="preserve"><value>Por favor, preencha todos os campos!</value></data>
+  <data name="changePasswordView.notEqual" xml:space="preserve"><value>Senha nova e confirma senha n\u00E3o conferem!</value></data>
+  <data name="changePasswordView.currentPwdNotEqual" xml:space="preserve"><value>Senha atual n\u00E3o confere.</value></data>
+  <data name="changePasswordView.checkFields" xml:space="preserve"><value>Verifique os campos!</value></data>
+  <data name="changePasswordView.passwordChanged" xml:space="preserve"><value>Senha alterada!</value></data>
+  <data name="changePasswordView.validatePassword" xml:space="preserve"><value>A senha atual n\u00E3o atende aos crit\u00E9rios de seguran\u00E7a.</value></data>
+  <data name="menu.sessionExpires" xml:space="preserve"><value>Session expires:</value></data>
+  <data name="menu.administrative" xml:space="preserve"><value>Administrativo</value></data>
+  <data name="menu.roles" xml:space="preserve"><value>Pap\u00E9is</value></data>
+  <data name="menu.users" xml:space="preserve"><value>Usu\u00E1rios</value></data>
+  <data name="menu.settings" xml:space="preserve"><value>Defini\u00E7\u00F5es</value></data>
+  <data name="menu.changePassword" xml:space="preserve"><value>Alterar Senha</value></data>
+  <data name="menu.about" xml:space="preserve"><value>Sobre</value></data>
+  <data name="menu.exit" xml:space="preserve"><value>Sair</value></data>
+  <data name="menu.admParameterCategory" xml:space="preserve"><value>Categoria dos Par\u00E2metros de Configura\u00E7\u00E3o</value></data>
+  <data name="menu.admParameter" xml:space="preserve"><value>Par\u00E2metros de Configura\u00E7\u00E3o</value></data>
+  <data name="menu.admPage" xml:space="preserve"><value>Administrar P\u00E1gina</value></data>
+  <data name="menu.admMenu" xml:space="preserve"><value>Administrar Menu</value></data>
+  <data name="menu.admProfile" xml:space="preserve"><value>Administrar Perfil</value></data>
+  <data name="menu.admUser" xml:space="preserve"><value>Visualizar os Usu\u00E1rios</value></data>
+  <data name="infoUser.title" xml:space="preserve"><value>Informa\u00E7\u00E3o do usu\u00E1rio</value></data>
+  <data name="infoUser.email" xml:space="preserve"><value>E-mail:</value></data>
+  <data name="infoUser.roles" xml:space="preserve"><value>Pap\u00E9is:</value></data>
+  <data name="accessDenied.title" xml:space="preserve"><value>Acesso negado</value></data>
+  <data name="accessDenied.text" xml:space="preserve"><value>Desculpe, voc\u00EA n\u00E3o tem permiss\u00E3o para visualizar esta p\u00E1gina.</value></data>
+  <data name="accessDenied.backHome" xml:space="preserve"><value>Clique aqui para voltar para a p\u00E1gina inicial.</value></data>
+  <data name="sessionExpired.title" xml:space="preserve"><value>Sess\u00E3o expirada</value></data>
+  <data name="sessionExpired.text" xml:space="preserve"><value>Sess\u00E3o expirada devido a inatividade.</value></data>
+  <data name="sessionExpired.backLogin" xml:space="preserve"><value>Retornar para a tela de login</value></data>
+  <data name="sessionTimeOut.title" xml:space="preserve"><value>Aviso de tempo da sess\u00E3o.</value></data>
+  <data name="sessionTimeOut.expire" xml:space="preserve"><value>Sua sess\u00E3o expirar\u00E1 em</value></data>
+  <data name="sessionTimeOut.seconds" xml:space="preserve"><value>segundos.</value></data>
+  <data name="sessionTimeOut.stay" xml:space="preserve"><value>Permanecer logado</value></data>
+  <data name="sessionTimeOut.leave" xml:space="preserve"><value>Sair</value></data>
+  <data name="error.title" xml:space="preserve"><value>P\u00E1gina de erro</value></data>
+  <data name="error.backHome" xml:space="preserve"><value>Voltar para a p\u00E1gina inicial</value></data>
+  <data name="error403.title" xml:space="preserve"><value>P\u00E1gina de erro</value></data>
+  <data name="error403.text" xml:space="preserve"><value>PROIBIDO</value></data>
+  <data name="error403.backHome" xml:space="preserve"><value>Voltar para a p\u00E1gina inicial</value></data>
+  <data name="about.title" xml:space="preserve"><value>Sobre</value></data>
+  <data name="about.developedBy" xml:space="preserve"><value>Desenvolvido por</value></data>
+  <data name="about.version" xml:space="preserve"><value>vers\u00E3o</value></data>
+  <data name="about.rights" xml:space="preserve"><value>Todos os direitos reservados para</value></data>
+  <data name="panelReport.cmbReportType" xml:space="preserve"><value>Escolha o tipo de relat\u00F3rio:</value></data>
+  <data name="panelReport.forceDownload" xml:space="preserve"><value>For\u00E7ar download</value></data>
+  <data name="listAutRole.title" xml:space="preserve"><value>Pap\u00E9is</value></data>
+  <data name="editAutRole.title" xml:space="preserve"><value>Pap\u00E9l</value></data>
+  <data name="editAutRole.name" xml:space="preserve"><value>Nome:</value></data>
+  <data name="listAutUser.title" xml:space="preserve"><value>Usu\u00E1rios</value></data>
+  <data name="editAutUser.title" xml:space="preserve"><value>Usu\u00E1rio</value></data>
+  <data name="editAutUser.name" xml:space="preserve"><value>Nome:</value></data>
+  <data name="editAutUser.email" xml:space="preserve"><value>E-mail:</value></data>
+  <data name="editAutUser.urlPhoto" xml:space="preserve"><value>urlPhoto:</value></data>
+  <data name="editAutUser.pickListRoles" xml:space="preserve"><value>Pap\u00E9is do Usu\u00E1rio:</value></data>
+  <data name="editAutUser.sourceCaptionRoles" xml:space="preserve"><value>Dispon\u00EDveis</value></data>
+  <data name="editAutUser.targetCaptionRoles" xml:space="preserve"><value>Selecionados</value></data>
+  <data name="listAdmParameterCategory.title" xml:space="preserve"><value>Categoria dos Par\u00E2metros de Configura\u00E7\u00E3o</value></data>
+  <data name="editAdmParameterCategory.title" xml:space="preserve"><value>Categoria dos Par\u00E2metros de Configura\u00E7\u00E3o</value></data>
+  <data name="editAdmParameterCategory.description" xml:space="preserve"><value>Descri\u00E7\u00E3o:</value></data>
+  <data name="editAdmParameterCategory.order" xml:space="preserve"><value>Ordem:</value></data>
+  <data name="listAdmParameter.title" xml:space="preserve"><value>Par\u00E2metros de Configura\u00E7\u00E3o</value></data>
+  <data name="editAdmParameter.title" xml:space="preserve"><value>Par\u00E2metros de Configura\u00E7\u00E3o</value></data>
+  <data name="editAdmParameter.category" xml:space="preserve"><value>Par\u00E2metros de Configura\u00E7\u00E3o</value></data>
+  <data name="editAdmParameter.code" xml:space="preserve"><value>C\u00F3digo:</value></data>
+  <data name="editAdmParameter.description" xml:space="preserve"><value>Descri\u00E7\u00E3o:</value></data>
+  <data name="editAdmParameter.value" xml:space="preserve"><value>Valor:</value></data>
+  <data name="listAdmMenu.title" xml:space="preserve"><value>Administrar Menu</value></data>
+  <data name="editAdmMenu.title" xml:space="preserve"><value>Administrar Menu</value></data>
+  <data name="editAdmMenu.page" xml:space="preserve"><value>P\u00E1gina:</value></data>
+  <data name="editAdmMenu.description" xml:space="preserve"><value>Nome do item de menu:</value></data>
+  <data name="editAdmMenu.menuParent" xml:space="preserve"><value>Menu pai:</value></data>
+  <data name="editAdmMenu.order" xml:space="preserve"><value>Ordem:</value></data>
+  <data name="listAdmPage.title" xml:space="preserve"><value>Administrar P\u00E1gina</value></data>
+  <data name="editAdmPage.title" xml:space="preserve"><value>Administrar P\u00E1gina</value></data>
+  <data name="editAdmPage.url" xml:space="preserve"><value>P\u00E1gina:</value></data>
+  <data name="editAdmPage.description" xml:space="preserve"><value>Descri\u00E7\u00E3o:</value></data>
+  <data name="editAdmPage.pickListProfiles" xml:space="preserve"><value>Perfil(s) da P\u00E1gina:</value></data>
+  <data name="editAdmPage.sourceCaptionProfiles" xml:space="preserve"><value>Dispon\u00EDveis</value></data>
+  <data name="editAdmPage.targetCaptionProfiles" xml:space="preserve"><value>Selecionados</value></data>
+  <data name="listAdmProfile.title" xml:space="preserve"><value>Administrar Perfil</value></data>
+  <data name="editAdmProfile.title" xml:space="preserve"><value>Administrar Perfil</value></data>
+  <data name="editAdmProfile.description" xml:space="preserve"><value>Descri\u00E7\u00E3o:</value></data>
+  <data name="editAdmProfile.sourceCaptionUsers" xml:space="preserve"><value>Dispon\u00EDveis</value></data>
+  <data name="editAdmProfile.targetCaptionUsers" xml:space="preserve"><value>Selecionados</value></data>
+  <data name="editAdmProfile.sourceCaptionPages" xml:space="preserve"><value>Dispon\u00EDveis</value></data>
+  <data name="editAdmProfile.targetCaptionPages" xml:space="preserve"><value>Selecionados</value></data>
+  <data name="editAdmProfile.pickListUsers" xml:space="preserve"><value>Usu\u00E1rio(s) do Perfil:</value></data>
+  <data name="editAdmProfile.pickListPages" xml:space="preserve"><value>P\u00E1gina(s) do Perfil:</value></data>
+  <data name="listAdmUser.title" xml:space="preserve"><value>Usu\u00E1rios</value></data>
+  <data name="editAdmUser.title" xml:space="preserve"><value>Usu\u00E1rio</value></data>
+  <data name="editAdmUser.login" xml:space="preserve"><value>Login:</value></data>
+  <data name="editAdmUser.name" xml:space="preserve"><value>Nome:</value></data>
+  <data name="editAdmUser.email" xml:space="preserve"><value>E-mail:</value></data>
+  <data name="editAdmUser.active" xml:space="preserve"><value>Ativo</value></data>
+  <data name="listVwAdmLog.title" xml:space="preserve"><value>Log de Auditoria</value></data>
+  <data name="editVwAdmLog.title" xml:space="preserve"><value>Log de Auditoria</value></data>
+  <data name="editVwAdmLog.name" xml:space="preserve"><value>Nome:</value></data>  
+</root>

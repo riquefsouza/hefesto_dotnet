@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using hefesto.admin.Services;
 
 namespace hefesto_dotnet_mvc.Controllers
 {
@@ -13,9 +14,12 @@ namespace hefesto_dotnet_mvc.Controllers
     {
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        private readonly IAdmProfileService _service;
+
+        public HomeController(ILogger<HomeController> logger, IAdmProfileService service)
         {
             _logger = logger;
+            _service = service;
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
@@ -24,12 +28,13 @@ namespace hefesto_dotnet_mvc.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            //ViewData["listMenu"] = "Hello " + name;
-            //ViewData["NumTimes"] = numTimes;
+            List<long> listaIdProfile = new List<long>();
+            listaIdProfile.Add(1);
+            listaIdProfile.Add(2);
 
-            return View();
+            return View(await _service.mountMenuItem(listaIdProfile));
         }
 
         public IActionResult Privacy()
