@@ -40,14 +40,14 @@ namespace hefesto_dotnet_webapi.admin.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<AdmParameterCategory>>> GetAdmParameterCategories()
         {
-            return await _context.AdmParameterCategories.ToListAsync();
+            return await _service.FindAll();
         }
 
         // GET: api/AdmParameterCategory/5
         [HttpGet("{id}")]
         public async Task<ActionResult<AdmParameterCategory>> GetAdmParameterCategory(long id)
         {
-            var admParameterCategory = await _context.AdmParameterCategories.FindAsync(id);
+            var admParameterCategory = await _service.FindById(id);
 
             if (admParameterCategory == null)
             {
@@ -67,22 +67,11 @@ namespace hefesto_dotnet_webapi.admin.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(admParameterCategory).State = EntityState.Modified;
+            var updated = await _service.Update(id, admParameterCategory);
 
-            try
+            if (!updated)
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!AdmParameterCategoryExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return NotFound();
             }
 
             return NoContent();
@@ -93,21 +82,11 @@ namespace hefesto_dotnet_webapi.admin.Controllers
         [HttpPost]
         public async Task<ActionResult<AdmParameterCategory>> PostAdmParameterCategory(AdmParameterCategory admParameterCategory)
         {
-            _context.AdmParameterCategories.Add(admParameterCategory);
-            try
+            var created = await _service.Insert(admParameterCategory);
+
+            if (created == null)
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateException)
-            {
-                if (AdmParameterCategoryExists(admParameterCategory.Id))
-                {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
+                return Conflict();
             }
 
             return CreatedAtAction("GetAdmParameterCategory", new { id = admParameterCategory.Id }, admParameterCategory);
@@ -117,21 +96,14 @@ namespace hefesto_dotnet_webapi.admin.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAdmParameterCategory(long id)
         {
-            var admParameterCategory = await _context.AdmParameterCategories.FindAsync(id);
-            if (admParameterCategory == null)
+            var deleted = await _service.Delete(id);
+            if (!deleted)
             {
                 return NotFound();
             }
 
-            _context.AdmParameterCategories.Remove(admParameterCategory);
-            await _context.SaveChangesAsync();
-
             return NoContent();
         }
 
-        private bool AdmParameterCategoryExists(long id)
-        {
-            return _context.AdmParameterCategories.Any(e => e.Id == id);
-        }
     }
 }

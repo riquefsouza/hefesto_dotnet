@@ -14,10 +14,12 @@ using Microsoft.AspNetCore.Mvc.Localization;
 namespace hefesto_dotnet_mvc.Controllers
 {
     public class AdmParameterController : Controller
-    {        
+    {
         private readonly dbhefestoContext _context;
 
         private readonly IAdmParameterService _service;
+
+        private readonly IAdmParameterCategoryService _serviceParameterCategory;
 
         public readonly IConfiguration _configuration;
 
@@ -26,24 +28,38 @@ namespace hefesto_dotnet_mvc.Controllers
         private readonly IHtmlLocalizer<AdmParameterController> _localizer;
 
         public AdmParameterController(dbhefestoContext context, IAdmParameterService service,
+            IAdmParameterCategoryService serviceParameterCategory,
             IConfiguration configuration, IHtmlLocalizer<AdmParameterController> localizer)
         {
             _context = context;
             _service = service;
+            _serviceParameterCategory = serviceParameterCategory;
             _localizer = localizer;
             _configuration = configuration;
 
             _messages = _configuration.GetSection("Messages_pt_BR").GetChildren().ToList();
         }
 
-        public async Task<IActionResult> ListAdmParameter()
+        private void LoadMessages()
         {
             foreach (var msg in _messages)
             {
                 ViewData[msg.Key] = msg.Value;
             }
 
-            var listAdmParameter = await _context.AdmParameters.ToListAsync();
+        }
+
+        private async void LoadAdmParameterCategory()
+        {
+            var listAdmCategories = await _serviceParameterCategory.FindAll();
+            ViewData["listAdmCategories"] = listAdmCategories;
+        }
+
+        public async Task<IActionResult> Index()
+        {
+            LoadMessages();
+
+            var listAdmParameter = await _service.FindAll();
             _service.SetTransient(listAdmParameter);
             return View(listAdmParameter);
         }
@@ -56,28 +72,57 @@ namespace hefesto_dotnet_mvc.Controllers
                 return NotFound();
             }
 
-            var admParameter = await _context.AdmParameters.FindAsync(id);
-            if (admParameter == null)
+            LoadAdmParameterCategory();
+            LoadMessages();
+
+            if (id > 0)
             {
-                return NotFound();
+                var admParameter = await _context.AdmParameters.FindAsync(id);
+                if (admParameter == null)
+                {
+                    return NotFound();
+                }
+                return View(admParameter);
+            } else
+            {
+                return View();
             }
-            return View(admParameter);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Save(long id, [Bind("Id,Code,Description,IdParameterCategory,Value")] AdmParameter admParameter)
+        public async Task<IActionResult> Save(long id, 
+            [Bind("Id,Code,Description,IdParameterCategory,Value")] AdmParameter admParameter)
         {
-            if (id != admParameter.Id)
+            if (id > 0)
             {
-                return NotFound();
-            }
+                if (id != admParameter.Id)
+                {
+                    return NotFound();
+                }
 
-            if (ModelState.IsValid)
+                if (ModelState.IsValid)
+                {
+                    var updated = await _service.Update(id, admParameter);
+                    if (!updated)
+                    {
+                        return NotFound();
+                    }
+
+                    return RedirectToAction(nameof(Index));
+                }
+            }
+            else
             {
-                return RedirectToAction(nameof(ListAdmParameter));
+                if (ModelState.IsValid)
+                {
+                    await _service.Insert(admParameter);
+                    return RedirectToAction(nameof(Index));
+                }
             }
 
             return View(admParameter);
         }
     }
+
+}

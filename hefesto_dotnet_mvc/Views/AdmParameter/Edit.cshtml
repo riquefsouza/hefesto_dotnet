@@ -14,9 +14,8 @@
     <input type="hidden" asp-for="Id" />
 
     <div class="card">
-        <div class="card-header"
-             style="font-weight: bold;font-size: large;">
-            <span th:text="#{editAdmParameter.title}" th:remove="tag"></span>
+        <div class="card-header" style="font-weight: bold;font-size: large;">
+            @ViewData["editAdmParameter.title"]
         </div>
         <div class="card-body">
             <div class="form-actions">
@@ -24,35 +23,36 @@
                     <span class="icon text-white-50">
                         <i class="fa fa-check-circle"></i>
                     </span>
-                    <span class="text" th:text="#{button.save}"></span>
+                    <span class="text">@ViewData["button.save"]</span>
                 </button>
 
                 <button type="reset" class="btn btn-light" id="btnReset">
                     <span class="icon text-gray-600">
                         <i class="fa fa-eraser"></i>
                     </span>
-                    <span class="text" th:text="#{button.reset}"></span>
+                    <span class="text">@ViewData["button.reset"]</span>
                 </button>
 
                 <button type="button" class="btn btn-primary" id="btnCancel">
                     <span class="icon text-white-50">
                         <i class="fa fa-times-circle"></i>
                     </span>
-                    <span class="text" th:text="#{button.cancel}"></span>
+                    <span class="text">@ViewData["button.cancel"]</span>
                 </button>
             </div>
             <div class="row">
                 <div class="col-md-4 form-group mb-2">
-                    <input type="hidden" id="admParameter_id" th:field="*{id}" />
+                    <input type="hidden" id="admParameter_id" />
 
                     <label asp-for="IdParameterCategory">@ViewData["editAdmParameter.category"]</label>
                     <select asp-for="IdParameterCategory" class="form-select">
                         @foreach (var itemCategory in (IEnumerable<AdmParameterCategory>)@ViewData["listAdmCategories"])
                         {
-                        <option value="@itemCategory.Id"
-                                selected="@((IEnumerable<AdmParameterCategory>)ViewData["listAdmCategories"]).Contains(@Model.AdmParameterCategory,itemCategory)">
-                            @itemCategory.Description
-                        </option>
+                            @if (@Model!=null && (itemCategory.Id == @Model.IdParameterCategory)) {
+                                <option value="@itemCategory.Id" selected>@itemCategory.Description</option>
+                            } else { 
+                                <option value="@itemCategory.Id">@itemCategory.Description</option>
+                            }
                         }
                     </select>
                 </div>

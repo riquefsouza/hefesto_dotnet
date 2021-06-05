@@ -40,8 +40,7 @@ namespace hefesto_dotnet_webapi.admin.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<AdmParameter>>> GetAdmParameters()
         {
-            var listAdmParameter = await _service.FindAll();
-            return listAdmParameter;
+            return await _service.FindAll();
         }
 
         // GET: api/AdmParameter/5
@@ -106,9 +105,5 @@ namespace hefesto_dotnet_webapi.admin.Controllers
             return NoContent();
         }
 
-        private bool AdmParameterExists(long id)
-        {
-            return _service.Exists(id);
-        }
     }
 }

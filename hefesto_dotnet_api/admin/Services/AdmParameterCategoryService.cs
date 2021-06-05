@@ -37,5 +37,81 @@ namespace hefesto.admin.Services
             return new BasePaged<AdmParameterCategory>(pagedData, 
                 BasePaging.of(validFilter, totalRecords, _uriService, route));
         }
+
+        public async Task<List<AdmParameterCategory>> FindAll()
+        {
+            var listObj = await _context.AdmParameterCategories.ToListAsync();
+            return listObj;
+        }
+
+        public async Task<AdmParameterCategory> FindById(long id)
+        {
+            var obj = await _context.AdmParameterCategories.FindAsync(id);
+            return obj;
+        }
+
+        public async Task<bool> Update(long id, AdmParameterCategory obj)
+        {
+            _context.Entry(obj).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!this.Exists(id))
+                {
+                    return false;
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return true;
+        }
+
+        public async Task<AdmParameterCategory> Insert(AdmParameterCategory obj)
+        {
+            _context.AdmParameterCategories.Add(obj);
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateException)
+            {
+                if (this.Exists(obj.Id))
+                {
+                    return null;
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return obj;
+        }
+
+        public async Task<bool> Delete(long id)
+        {
+            var obj = await _context.AdmParameterCategories.FindAsync(id);
+            if (obj == null)
+            {
+                return false;
+            }
+
+            _context.AdmParameterCategories.Remove(obj);
+            await _context.SaveChangesAsync();
+
+            return true;
+        }
+
+        public bool Exists(long id)
+        {
+            return _context.AdmParameterCategories.Any(e => e.Id == id);
+        }
     }
 }

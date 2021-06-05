@@ -40,7 +40,9 @@ class ListAdmParameter extends HFSSystemUtil {
 	
 	btnAddClick(event) {
 		event.preventDefault();
-		window.location.href=this._url.replace("View", "View/add");
+		this._form[0].action += '/0';
+		this._formListAdmParameter.submit();
+		//window.location.href = this._url.replace("Edit", "Create");
 	}
 	
 	btnEditClick(event) {
