@@ -5,13 +5,12 @@ class EditAdmParameter extends HFSSystemUtil {
 		
 		this.hideQueryString();
 		
-		//this._page = $('#admParameterView');
+		this._page = $('#admParameterView');
 	}
 	
 	btnCancelClick(event) {
 		event.preventDefault();
-		//this._page[0].click();
-		window.location.href = '/AdmParameter';
+		this._page[0].click();
 	}
 	
 }

@@ -42,7 +42,6 @@ class ListAdmParameter extends HFSSystemUtil {
 		event.preventDefault();
 		this._form[0].action += '/0';
 		this._formListAdmParameter.submit();
-		//window.location.href = this._url.replace("Edit", "Create");
 	}
 	
 	btnEditClick(event) {
@@ -80,10 +79,10 @@ class ListAdmParameter extends HFSSystemUtil {
 		var selectedRow = $(this._selectedRow)[0];
 		
 		if (selectedRow && selectedRow.id > 0) {		
-			
+
 			$.ajax({
 				method: "DELETE",
-				url: window.location.href + "/" + selectedRow.id,
+				url: window.location.href + "/Delete/" + selectedRow.id,
 				dataType: "json",
 			    contentType: "application/json; charset=utf-8",								
 		        context: this
@@ -96,7 +95,6 @@ class ListAdmParameter extends HFSSystemUtil {
 	            //alert("An error occured DELETE: " + xhr.status + " " + xhr.statusText);
 				this.dangerShow("An error occured DELETE: " + xhr.status + " " + xhr.statusText);
 	        });			
-			
 			
 		} else {
 			this.dangerShow(this._messageSelectTable);

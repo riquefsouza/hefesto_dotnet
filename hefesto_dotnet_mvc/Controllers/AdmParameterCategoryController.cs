@@ -144,7 +144,7 @@ namespace hefesto_dotnet_mvc.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool AdmParameterCategoryExists(long id)
+        private bool AdmParameterCategoryExists(long? id)
         {
             return _context.AdmParameterCategories.Any(e => e.Id == id);
         }

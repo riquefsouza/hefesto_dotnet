@@ -44,7 +44,7 @@ namespace hefesto.admin.Services
             return listObj;
         }
 
-        public async Task<AdmParameterCategory> FindById(long id)
+        public async Task<AdmParameterCategory> FindById(long? id)
         {
             var obj = await _context.AdmParameterCategories.FindAsync(id);
             return obj;
@@ -75,6 +75,8 @@ namespace hefesto.admin.Services
 
         public async Task<AdmParameterCategory> Insert(AdmParameterCategory obj)
         {
+            obj.Id = this.GetNextSequenceValue();
+
             _context.AdmParameterCategories.Add(obj);
             try
             {
@@ -113,5 +115,14 @@ namespace hefesto.admin.Services
         {
             return _context.AdmParameterCategories.Any(e => e.Id == id);
         }
+
+        private long GetNextSequenceValue()
+        {
+            var rawQuery = _context.Set<SequenceValue>().FromSqlRaw("select nextval('public.adm_parameter_category_seq') as Value;");
+            var nextVal = rawQuery.AsEnumerable().First().Value;
+
+            return nextVal;
+        }
+
     }
 }

@@ -43,10 +43,10 @@
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <li>
-                                <a class="dropdown-item" asp-area="" asp-controller="AdmParameterCategory" asp-action="Index">
+                                <a class="dropdown-item" id="admParameterCategoryView" asp-area="" asp-controller="AdmParameterCategory" asp-action="Index">
                                     Parameter Category
                                 </a>
-                                <a class="dropdown-item" asp-area="" asp-controller="AdmParameter" asp-action="Index">
+                                <a class="dropdown-item" id="admParameterView" asp-area="" asp-controller="AdmParameter" asp-action="Index">
                                     Parameter
                                 </a>
                             </li>
@@ -77,8 +77,8 @@
     </nav>
 
 
-    <div class="container">
-        <main role="main" class="pb-3">
+    <div>
+        <main role="main">
             @RenderBody()
         </main>
     </div>

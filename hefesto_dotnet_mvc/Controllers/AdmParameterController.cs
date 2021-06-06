@@ -53,6 +53,7 @@ namespace hefesto_dotnet_mvc.Controllers
         {
             var listAdmCategories = await _serviceParameterCategory.FindAll();
             ViewData["listAdmCategories"] = listAdmCategories;
+            //ViewBag.listAdmCategories = listAdmCategories;
         }
 
         public async Task<IActionResult> Index()
@@ -60,7 +61,6 @@ namespace hefesto_dotnet_mvc.Controllers
             LoadMessages();
 
             var listAdmParameter = await _service.FindAll();
-            _service.SetTransient(listAdmParameter);
             return View(listAdmParameter);
         }
 
@@ -77,7 +77,7 @@ namespace hefesto_dotnet_mvc.Controllers
 
             if (id > 0)
             {
-                var admParameter = await _context.AdmParameters.FindAsync(id);
+                var admParameter = await _service.FindById(id);
                 if (admParameter == null)
                 {
                     return NotFound();
@@ -123,6 +123,17 @@ namespace hefesto_dotnet_mvc.Controllers
 
             return View(admParameter);
         }
+
+        // DELETE: AdmParameter/Delete/5
+        //[HttpDelete, ActionName("Delete")]
+        //[ValidateAntiForgeryToken]
+        [HttpDelete]
+        public async Task<ActionResult> Delete(long id)
+        {
+            await _service.Delete(id);
+            return new JsonResult(new object());
+        }
+
     }
 
 }

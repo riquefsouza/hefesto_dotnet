@@ -11,9 +11,9 @@ namespace hefesto.base_hefesto.Services
 
 		Task<List<T>> FindAll();
 
-		Task<T> FindById(I id);		
+		Task<T> FindById(long? id);		
 
-		Task<bool> Update(long id, T obj);
+		Task<bool> Update(I id, T obj);
 
 		Task<T> Insert(T obj);
 

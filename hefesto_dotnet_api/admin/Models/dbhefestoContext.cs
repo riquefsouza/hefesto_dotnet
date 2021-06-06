@@ -298,6 +298,8 @@ namespace hefesto.admin.Models
                     .HasConstraintName("adm_usp_profile_fkey");
             });
 
+            modelBuilder.Entity<SequenceValue>().HasNoKey();
+
             modelBuilder.HasSequence("adm_menu_seq");
 
             modelBuilder.HasSequence("adm_page_profile_seq");
@@ -312,7 +314,7 @@ namespace hefesto.admin.Models
 
             modelBuilder.HasSequence("adm_user_profile_seq");
 
-            modelBuilder.HasSequence("adm_user_seq");
+            modelBuilder.HasSequence("adm_user_seq");         
 
             OnModelCreatingPartial(modelBuilder);
         }
