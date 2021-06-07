@@ -10,6 +10,7 @@ using hefesto.admin.Services;
 using Microsoft.AspNetCore.Authorization;
 using hefesto.base_hefesto.Models;
 using hefesto.base_hefesto.Pagination;
+using hefesto.base_hefesto.Services;
 
 namespace hefesto_dotnet_webapi.admin.Controllers
 {
@@ -21,9 +22,12 @@ namespace hefesto_dotnet_webapi.admin.Controllers
     {
         private readonly IAdmProfileService _service;
 
-        public AdmProfileController(IAdmProfileService service)
+        private readonly ISystemService _systemService;
+
+        public AdmProfileController(IAdmProfileService service, ISystemService systemService)
         {
             _service = service;
+            _systemService = systemService;
         }
 
         [HttpGet("paged")]
@@ -105,7 +109,7 @@ namespace hefesto_dotnet_webapi.admin.Controllers
 
         [HttpGet("mountMenu")]
         public async Task<ActionResult<IEnumerable<MenuItemDTO>>> mountMenu(List<long> listaIdProfile){
-            return await _service.MountMenuItem(listaIdProfile);
+            return await _systemService.MountMenuItem(listaIdProfile);
         }
         
         [HttpGet("findProfilesByPage/{pageId}")]

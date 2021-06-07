@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using hefesto.base_hefesto.Models
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -38,19 +40,23 @@
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item dropdown">
 
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Administrator
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <li>
-                                <a class="dropdown-item" id="admParameterCategoryView" asp-area="" asp-controller="AdmParameterCategory" asp-action="Index">
-                                    Parameter Category
-                                </a>
-                                <a class="dropdown-item" id="admParameterView" asp-area="" asp-controller="AdmParameter" asp-action="Index">
-                                    Parameter
-                                </a>
-                            </li>
-                        </ul>
+                        @foreach (var menu in (IEnumerable<MenuItemDTO>)@ViewData["MenuItem"])
+                        {
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                @menu.Label
+
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <li>
+                                    @foreach (var submenu in menu.Item)
+                                    {
+                                        <a class="dropdown-item" id="@submenu.View" href="@submenu.Name">
+                                            @submenu.Label
+                                        </a>
+                                    }
+                                </li>
+                            </ul>
+                        }
 
                     </li>
 

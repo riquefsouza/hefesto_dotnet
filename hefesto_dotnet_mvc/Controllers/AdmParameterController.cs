@@ -17,7 +17,7 @@ namespace hefesto_dotnet_mvc.Controllers
 
         public AdmParameterController(IAdmParameterService service,
             IAdmParameterCategoryService serviceParameterCategory,
-            IMessageService messageService): base(messageService)
+            IMessageService messageService, ISystemService systemService) : base(messageService, systemService)
         {
             _service = service;
             _serviceParameterCategory = serviceParameterCategory;
