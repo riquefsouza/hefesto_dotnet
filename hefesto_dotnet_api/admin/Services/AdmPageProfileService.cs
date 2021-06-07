@@ -29,7 +29,7 @@ namespace hefesto.admin.Services
             item.AdmProfile = _context.AdmProfiles.Find(item.IdProfile);
         }
 
-        public async Task<List<AdmPageProfile>> findAll()
+        public async Task<List<AdmPageProfile>> FindAll()
         {
             var listAdmPageProfile = await _context.AdmPageProfiles.ToListAsync();
             SetTransient(listAdmPageProfile);

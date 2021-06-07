@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using hefesto.admin.Services;
+using hefesto.base_hefesto.Models;
 
 namespace hefesto_dotnet_mvc.Controllers
 {
@@ -30,11 +31,13 @@ namespace hefesto_dotnet_mvc.Controllers
 
         public async Task<IActionResult> Index()
         {
+            ViewData["AlertMessage"] = new AlertMessageVO();
+
             List<long> listaIdProfile = new List<long>();
             listaIdProfile.Add(1);
             listaIdProfile.Add(2);
 
-            return View(await _service.mountMenuItem(listaIdProfile));
+            return View(await _service.MountMenuItem(listaIdProfile));
         }
 
         public IActionResult Privacy()

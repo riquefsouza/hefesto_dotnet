@@ -8,7 +8,8 @@ namespace hefesto.admin.Services
     {
         void SetTransient(List<AdmPageProfile> list);
         void SetTransient(AdmPageProfile item);
-        Task<List<AdmPageProfile>> findAll();
+
+        Task<List<AdmPageProfile>> FindAll();
         List<AdmProfile> GetProfilesByPage(long admPageId);
         List<AdmPage> GetPagesByProfile(long admProfileId);
     }

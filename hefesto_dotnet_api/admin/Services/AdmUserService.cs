@@ -53,9 +53,103 @@ namespace hefesto.admin.Services
                 .Take(validFilter.size)
                 .ToListAsync();
             var totalRecords = await _context.AdmUsers.CountAsync();
+            this.SetTransient(pagedData);
 
             return new BasePaged<AdmUser>(pagedData,
                 BasePaging.of(validFilter, totalRecords, _uriService, route));
+        }
+
+        public async Task<List<AdmUser>> FindAll()
+        {
+            var listObj = await _context.AdmUsers.ToListAsync();
+            this.SetTransient(listObj);
+            return listObj;
+        }
+
+        public async Task<AdmUser> FindById(long? id)
+        {
+            var obj = await _context.AdmUsers.FindAsync(id);
+
+            if (obj != null)
+            {
+                this.SetTransient(obj);
+            }
+
+            return obj;
+        }
+
+        public async Task<bool> Update(long id, AdmUser obj)
+        {
+            _context.Entry(obj).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!this.Exists(id))
+                {
+                    return false;
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return true;
+        }
+
+        public async Task<AdmUser> Insert(AdmUser obj)
+        {
+            obj.Id = this.GetNextSequenceValue();
+
+            _context.AdmUsers.Add(obj);
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateException)
+            {
+                if (this.Exists(obj.Id))
+                {
+                    return null;
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return obj;
+        }
+
+        public async Task<bool> Delete(long id)
+        {
+            var obj = await _context.AdmUsers.FindAsync(id);
+            if (obj == null)
+            {
+                return false;
+            }
+
+            _context.AdmUsers.Remove(obj);
+            await _context.SaveChangesAsync();
+
+            return true;
+        }
+
+        public bool Exists(long id)
+        {
+            return _context.AdmUsers.Any(e => e.Id == id);
+        }
+
+        private long GetNextSequenceValue()
+        {
+            var rawQuery = _context.Set<SequenceValue>().FromSqlRaw("select nextval('public.adm_user_seq') as Value;");
+            var nextVal = rawQuery.AsEnumerable().First().Value;
+
+            return nextVal;
         }
 
         public async Task<AdmUser> Authenticate(string login, string password)

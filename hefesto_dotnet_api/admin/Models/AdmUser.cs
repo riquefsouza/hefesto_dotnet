@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
@@ -18,6 +19,8 @@ namespace hefesto.admin.Models
         public long Id { get; set; }
         public char? Active { get; set; }
         public string Email { get; set; }
+
+        [Required(ErrorMessage = "The field Login is required")]
         public string Login { get; set; }
         public string Name { get; set; }
         public string Password { get; set; }

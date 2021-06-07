@@ -8,7 +8,8 @@ namespace hefesto.admin.Services
     {
         void SetTransient(List<AdmUserProfile> list);
         void SetTransient(AdmUserProfile item);
-        Task<List<AdmUserProfile>> findAll();
+
+        Task<List<AdmUserProfile>> FindAll();
         List<AdmProfile> GetProfilesByUser(long admUserId);
         List<AdmUser> GetUsersByProfile(long admProfileId);
     }

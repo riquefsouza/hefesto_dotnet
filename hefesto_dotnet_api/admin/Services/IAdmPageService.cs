@@ -1,15 +1,12 @@
 using System.Collections.Generic;
 using hefesto.admin.Models;
-using hefesto.base_hefesto.Pagination;
-using System.Threading.Tasks;
+using hefesto.base_hefesto.Services;
 
 namespace hefesto.admin.Services
 {
-    public interface IAdmPageService
+    public interface IAdmPageService : IBaseCrud<AdmPage, long>
     {
         void SetTransient(List<AdmPage> list);
         void SetTransient(AdmPage item);
-
-        Task<BasePaged<AdmPage>> GetPage(string route, PaginationFilter filter);
     }
 }

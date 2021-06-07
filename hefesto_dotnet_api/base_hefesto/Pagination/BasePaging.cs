@@ -18,7 +18,7 @@ namespace hefesto.base_hefesto.Pagination
         public int ColumnOrder { get; set; }
         public string ColumnTitle { get; set; }
 
-        private List<BasePageItem> items = new List<BasePageItem>();
+        public List<BasePageItem> Items { get; set; }
 
         public int TotalRecords { get; set; }
         public Uri FirstPage { get; set; }
@@ -26,9 +26,21 @@ namespace hefesto.base_hefesto.Pagination
         public Uri NextPage { get; set; }
         public Uri PreviousPage { get; set; }
 
-        public BasePaging(): base()
+        public string NextEnabledClass { get; set; }
+        public string PrevEnabledClass { get; set; }
+
+        private PaginationFilter _validFilter;
+        private IUriService _uriService;
+        private string _route;
+
+        public BasePaging(PaginationFilter validFilter, IUriService uriService, string route) : base()
         {
+            _validFilter = validFilter;
+            _uriService = uriService;
+            _route = route;
+
             this.TotalRecords = 0;
+            Items = new List<BasePageItem>();
         }
 
         public BasePaging(bool nextEnabled, bool prevEnabled, int pageSize, int pageNumber,
@@ -44,14 +56,20 @@ namespace hefesto.base_hefesto.Pagination
             this.ColumnOrder = columnOrder;
             this.ColumnTitle = columnTitle;
 
-            this.items = items;
+            this.Items = items;
+        }
+
+        public Uri CurrentPage(int PageNumber)
+        {
+            return _uriService.GetPageUri(new PaginationFilter(PageNumber, _validFilter.size,
+                _validFilter.sort, _validFilter.columnOrder, _validFilter.columnTitle), _route);
         }
 
         public void addPageItems(int from, int to, int pageNumber)
         {
             for (int i = from; i < to; i++)
             {
-                items.Add(BasePageItem.builder()
+                Items.Add(BasePageItem.builder()
                                   .active(pageNumber != i)
                                   .index(i)
                                   .pageItemType(BasePageItemType.PAGE)
@@ -61,12 +79,12 @@ namespace hefesto.base_hefesto.Pagination
 
         public void last(int pageSize)
         {
-            items.Add(BasePageItem.builder()
+            Items.Add(BasePageItem.builder()
                               .active(false)
                               .pageItemType(BasePageItemType.DOTS)
                               .build());
 
-            items.Add(BasePageItem.builder()
+            Items.Add(BasePageItem.builder()
                               .active(true)
                               .index(pageSize)
                               .pageItemType(BasePageItemType.PAGE)
@@ -75,13 +93,13 @@ namespace hefesto.base_hefesto.Pagination
 
         public void first(int pageNumber)
         {
-            items.Add(BasePageItem.builder()
+            Items.Add(BasePageItem.builder()
                               .active(pageNumber != 1)
                               .index(1)
                               .pageItemType(BasePageItemType.PAGE)
                               .build());
 
-            items.Add(BasePageItem.builder()
+            Items.Add(BasePageItem.builder()
                               .active(false)
                               .pageItemType(BasePageItemType.DOTS)
                               .build());
@@ -89,7 +107,7 @@ namespace hefesto.base_hefesto.Pagination
 
         public static BasePaging of(PaginationFilter validFilter, int totalRecords, IUriService uriService, string route)
         {
-            BasePaging paging = new BasePaging();
+            BasePaging paging = new BasePaging(validFilter, uriService, route);
 
             var totalPages = ((double)totalRecords / (double)validFilter.size);
             int roundedTotalPages = Convert.ToInt32(Math.Ceiling(totalPages));
@@ -110,10 +128,13 @@ namespace hefesto.base_hefesto.Pagination
             
             paging.TotalRecords = totalRecords;
 
-            paging.PageSize = roundedTotalPages;
+            paging.PageSize = validFilter.size;
             paging.NextEnabled = validFilter.pageNumber != roundedTotalPages;
             paging.PrevEnabled = validFilter.pageNumber != 1;
             paging.PageNumber = validFilter.pageNumber;
+
+            paging.NextEnabledClass = paging.NextEnabled ? "page-item" : "page-item disabled";
+            paging.PrevEnabledClass = paging.PrevEnabled ? "page-item" : "page-item disabled";
 
             paging.PageSort = validFilter.sort;
             paging.ColumnOrder = validFilter.columnOrder;

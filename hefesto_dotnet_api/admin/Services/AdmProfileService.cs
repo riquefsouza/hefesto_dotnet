@@ -30,14 +30,14 @@ namespace hefesto.admin.Services
             _serviceMenu = serviceMenu;
         }
 
-        public async Task<List<AdmProfile>> findProfilesByPage(long pageId)
+        public async Task<List<AdmProfile>> FindProfilesByPage(long pageId)
         {
             List<AdmProfile> listProfiles = _servicePageProfile.GetProfilesByPage(pageId);
             SetTransient(listProfiles);
             return await Task.FromResult(listProfiles);
         }
 
-        public async Task<List<AdmProfile>> findProfilesByUser(long userId)
+        public async Task<List<AdmProfile>> FindProfilesByUser(long userId)
         {
             List<AdmProfile> listProfiles = _serviceUserProfile.GetProfilesByUser(userId);
             SetTransient(listProfiles);
@@ -80,9 +80,103 @@ namespace hefesto.admin.Services
                 .Take(validFilter.size)
                 .ToListAsync();
             var totalRecords = await _context.AdmProfiles.CountAsync();
+            this.SetTransient(pagedData);
 
             return new BasePaged<AdmProfile>(pagedData,
                 BasePaging.of(validFilter, totalRecords, _uriService, route));
+        }
+
+        public async Task<List<AdmProfile>> FindAll()
+        {
+            var listObj = await _context.AdmProfiles.ToListAsync();
+            this.SetTransient(listObj);
+            return listObj;
+        }
+
+        public async Task<AdmProfile> FindById(long? id)
+        {
+            var obj = await _context.AdmProfiles.FindAsync(id);
+
+            if (obj != null)
+            {
+                this.SetTransient(obj);
+            }
+
+            return obj;
+        }
+
+        public async Task<bool> Update(long id, AdmProfile obj)
+        {
+            _context.Entry(obj).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!this.Exists(id))
+                {
+                    return false;
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return true;
+        }
+
+        public async Task<AdmProfile> Insert(AdmProfile obj)
+        {
+            obj.Id = this.GetNextSequenceValue();
+
+            _context.AdmProfiles.Add(obj);
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateException)
+            {
+                if (this.Exists(obj.Id))
+                {
+                    return null;
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return obj;
+        }
+
+        public async Task<bool> Delete(long id)
+        {
+            var obj = await _context.AdmProfiles.FindAsync(id);
+            if (obj == null)
+            {
+                return false;
+            }
+
+            _context.AdmProfiles.Remove(obj);
+            await _context.SaveChangesAsync();
+
+            return true;
+        }
+
+        public bool Exists(long id)
+        {
+            return _context.AdmProfiles.Any(e => e.Id == id);
+        }
+
+        private long GetNextSequenceValue()
+        {
+            var rawQuery = _context.Set<SequenceValue>().FromSqlRaw("select nextval('public.adm_profile_seq') as Value;");
+            var nextVal = rawQuery.AsEnumerable().First().Value;
+
+            return nextVal;
         }
 
         public List<AdmMenu> findMenuByIdProfiles(List<long> listaIdProfile, AdmMenu admMenu){
@@ -215,7 +309,7 @@ namespace hefesto.admin.Services
             return lista;
         }
 
-        public async Task<List<MenuItemDTO>> mountMenuItem(List<long> listaIdProfile)
+        public async Task<List<MenuItemDTO>> MountMenuItem(List<long> listaIdProfile)
         {
             List<MenuItemDTO> lista = new List<MenuItemDTO>();
 

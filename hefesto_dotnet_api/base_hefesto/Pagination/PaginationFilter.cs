@@ -26,7 +26,7 @@ namespace hefesto.base_hefesto.Pagination
         public PaginationFilter(int pageNumber, int size, string sort, int columnOrder, string columnTitle)
         {
             this.pageNumber = pageNumber < 1 ? 1 : pageNumber;
-            this.size = size > 10 ? 10 : size;            
+            this.size = size < 10 ? 10 : size;            
             this.sort = sort.Trim().Length == 0 ? "ASC, id" : sort;
             this.columnOrder = columnOrder < 0 ? 0 : columnOrder;
             this.columnTitle = columnTitle.Trim().Length == 0 ? "id" : columnTitle;

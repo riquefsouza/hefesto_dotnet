@@ -18,18 +18,15 @@ namespace hefesto_dotnet_webapi.admin.Controllers
     [ApiController]
     public class AdmParameterCategoryController : ControllerBase
     {
-        private readonly dbhefestoContext _context;
-
         private readonly IAdmParameterCategoryService _service;
 
-        public AdmParameterCategoryController(dbhefestoContext context, IAdmParameterCategoryService service)
+        public AdmParameterCategoryController(IAdmParameterCategoryService service)
         {
-            _context = context;
             _service = service;
         }
 
         [HttpGet("paged")]
-        public async Task<ActionResult<IEnumerable<AdmParameterCategory>>> listPaged([FromQuery] PaginationFilter filter)
+        public async Task<ActionResult<BasePaged<AdmParameterCategory>>> ListPaged([FromQuery] PaginationFilter filter)
         {
             var route = Request.Path.Value;
             var pagedData = await _service.GetPage(route, filter);

@@ -42,11 +42,11 @@ namespace hefesto.base_hefesto.Pagination
 	public class BasePageItem
 	{
 
-		public BasePageItemType pageItemType { get; set; }
+		public BasePageItemType PageItemType { get; set; }
 
-		public int index { get; set; }
+		public int Index { get; set; }
 
-		public bool active { get; set; }
+		public bool Active { get; set; }
 
 		public BasePageItem()
 		{
@@ -55,9 +55,9 @@ namespace hefesto.base_hefesto.Pagination
 
 		public BasePageItem(BasePageItemType pageItemType, int index, bool active)
 		{
-			this.pageItemType = pageItemType;
-			this.index = index;
-			this.active = active;
+			this.PageItemType = pageItemType;
+			this.Index = index;
+			this.Active = active;
 		}
 
 		public static Builder builder()

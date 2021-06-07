@@ -76,6 +76,7 @@
         </div>
     </nav>
 
+    @{await Html.RenderPartialAsync("AlertMessages", ViewData["AlertMessage"]);}
 
     <div>
         <main role="main">

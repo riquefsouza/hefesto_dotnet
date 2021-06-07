@@ -9,9 +9,9 @@ namespace hefesto.base_hefesto.Pagination
 {
     public class BasePaged<T>
 	{
-		public List<T> page { get; set; }
+		public List<T> Page { get; set; }
 
-		public BasePaging paging { get; set; }
+		public BasePaging Paging { get; set; }
 
 		public BasePaged()
 		{
@@ -44,8 +44,8 @@ namespace hefesto.base_hefesto.Pagination
                 Console.WriteLine("Error Sort BasePaged: " + e.Message);
             }
 
-            this.page = page;
-            this.paging = paging;
+            this.Page = page;
+            this.Paging = paging;
         }
     }
 }

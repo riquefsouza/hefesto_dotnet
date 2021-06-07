@@ -1,0 +1,24 @@
+@using hefesto.base_hefesto.Report
+
+<div class="col-md-3 form-group">
+    <label for="cmbReportType">@ViewData["panelReport.cmbReportType"]</label>
+    <select class="form-select" id="cmbReportType">
+        @foreach (var group in (IEnumerable<ReportGroupVO>)@ViewData["ListReportType"])
+        {
+            <optgroup label="@group.Group">
+                @foreach (var option in group.Types)
+                {
+                    <option value="@option.Type.ToString()">@option.Description</option>
+                }
+            </optgroup>
+        }
+    </select>
+</div>
+<div class="col-md-3 form-group">
+    <div class="form-check">
+        <input class="form-check-input" type="checkbox" value="" id="forceDownload">
+        <label class="form-check-label" for="forceDownload">
+            &nbsp;@ViewData["panelReport.forceDownload"]
+        </label>
+    </div>
+</div>

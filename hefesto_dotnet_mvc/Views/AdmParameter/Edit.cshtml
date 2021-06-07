@@ -48,9 +48,12 @@
                     <select asp-for="IdParameterCategory" class="form-select">
                         @foreach (var itemCategory in (IEnumerable<AdmParameterCategory>)@ViewData["listAdmCategories"])
                         {
-                            @if (@Model!=null && (itemCategory.Id == @Model.IdParameterCategory)) {
+                            @if (@Model != null && (itemCategory.Id == @Model.IdParameterCategory))
+                            {
                                 <option value="@itemCategory.Id" selected>@itemCategory.Description</option>
-                            } else { 
+                            }
+                            else
+                            {
                                 <option value="@itemCategory.Id">@itemCategory.Description</option>
                             }
                         }
@@ -89,3 +92,7 @@
 <script src="~/static/js/admin/admParameter/editAdmParameter.js"></script>
 
 <!-- =================================================================================== -->
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

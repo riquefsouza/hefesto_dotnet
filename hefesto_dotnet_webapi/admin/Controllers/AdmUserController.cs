@@ -19,24 +19,18 @@ namespace hefesto_dotnet_webapi.admin.Controllers
     [ApiController]
     public class AdmUserController : ControllerBase
     {
-        private readonly ILogger<AdmUserController> _logger;
-        private readonly dbhefestoContext _context;
         private readonly IAdmUserService _service;
 
-        public AdmUserController(dbhefestoContext context, IAdmUserService service,
-            ILogger<AdmUserController> logger)
+        public AdmUserController(IAdmUserService service)
         {
-            _context = context;
             _service = service;
-            _logger = logger;
         }
 
         [HttpGet("paged")]
-        public async Task<ActionResult<IEnumerable<AdmUser>>> listPaged([FromQuery] PaginationFilter filter)
+        public async Task<ActionResult<BasePaged<AdmUser>>> ListPaged([FromQuery] PaginationFilter filter)
         {
             var route = Request.Path.Value;
             var pagedData = await _service.GetPage(route, filter);
-            _service.SetTransient(pagedData.page);
             return Ok(pagedData);
         }
 
@@ -44,22 +38,18 @@ namespace hefesto_dotnet_webapi.admin.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<AdmUser>>> GetAdmUsers()
         {
-            var listAdmUser = await _context.AdmUsers.ToListAsync();
-            _service.SetTransient(listAdmUser);
-            return listAdmUser;
+            return await _service.FindAll();
         }
 
         // GET: api/AdmUser/5
         [HttpGet("{id}")]
         public async Task<ActionResult<AdmUser>> GetAdmUser(long id)
         {
-            var admUser = await _context.AdmUsers.FindAsync(id);
+            var admUser = await _service.FindById(id);
 
             if (admUser == null)
             {
                 return NotFound();
-            } else {
-                _service.SetTransient(admUser);
             }
 
             return admUser;
@@ -75,22 +65,11 @@ namespace hefesto_dotnet_webapi.admin.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(admUser).State = EntityState.Modified;
+            var updated = await _service.Update(id, admUser);
 
-            try
+            if (!updated)
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!AdmUserExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return NotFound();
             }
 
             return NoContent();
@@ -101,21 +80,11 @@ namespace hefesto_dotnet_webapi.admin.Controllers
         [HttpPost]
         public async Task<ActionResult<AdmUser>> PostAdmUser(AdmUser admUser)
         {
-            _context.AdmUsers.Add(admUser);
-            try
+            var created = await _service.Insert(admUser);
+
+            if (created == null)
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateException)
-            {
-                if (AdmUserExists(admUser.Id))
-                {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
+                return Conflict();
             }
 
             return CreatedAtAction("GetAdmUser", new { id = admUser.Id }, admUser);
@@ -125,21 +94,14 @@ namespace hefesto_dotnet_webapi.admin.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAdmUser(long id)
         {
-            var admUser = await _context.AdmUsers.FindAsync(id);
-            if (admUser == null)
+            var deleted = await _service.Delete(id);
+            if (!deleted)
             {
                 return NotFound();
             }
 
-            _context.AdmUsers.Remove(admUser);
-            await _context.SaveChangesAsync();
-
             return NoContent();
         }
 
-        private bool AdmUserExists(long id)
-        {
-            return _context.AdmUsers.Any(e => e.Id == id);
-        }
     }
 }

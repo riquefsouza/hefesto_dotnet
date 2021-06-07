@@ -2,9 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using hefesto.admin.Models;
 using hefesto.admin.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -18,18 +16,15 @@ namespace hefesto_dotnet_webapi.admin.Controllers
     [ApiController]
     public class AdmParameterController : ControllerBase
     {
-        private readonly dbhefestoContext _context;
-
         private readonly IAdmParameterService _service;
 
-        public AdmParameterController(dbhefestoContext context, IAdmParameterService service)
+        public AdmParameterController(IAdmParameterService service)
         {
-            _context = context;
             _service = service;
         }
 
         [HttpGet("paged")]
-        public async Task<ActionResult<IEnumerable<AdmParameter>>> listPaged([FromQuery] PaginationFilter filter)
+        public async Task<ActionResult<BasePaged<AdmParameter>>> ListPaged([FromQuery] PaginationFilter filter)
         {
             var route = Request.Path.Value;
             var pagedData = await _service.GetPage(route, filter);           

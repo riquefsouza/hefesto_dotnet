@@ -18,22 +18,18 @@ namespace hefesto_dotnet_webapi.admin.Controllers
     [ApiController]
     public class AdmMenuController : ControllerBase
     {
-        private readonly dbhefestoContext _context;
-
         private readonly IAdmMenuService _service;
 
-        public AdmMenuController(dbhefestoContext context, IAdmMenuService service)
+        public AdmMenuController(IAdmMenuService service)
         {
-            _context = context;
             _service = service;
         }
 
         [HttpGet("paged")]
-        public async Task<ActionResult<IEnumerable<AdmMenu>>> listPaged([FromQuery] PaginationFilter filter)
+        public async Task<ActionResult<BasePaged<AdmMenu>>> ListPaged([FromQuery] PaginationFilter filter)
         {
             var route = Request.Path.Value;
             var pagedData = await _service.GetPage(route, filter);
-            _service.SetTransient(pagedData.page);
             return Ok(pagedData);
         }
 
@@ -41,22 +37,18 @@ namespace hefesto_dotnet_webapi.admin.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<AdmMenu>>> GetAdmMenus()
         {
-            var listAdmMenu = await _context.AdmMenus.ToListAsync();
-            _service.SetTransient(listAdmMenu);
-            return listAdmMenu;
+            return await _service.FindAll();
         }
 
         // GET: api/AdmMenu/5
         [HttpGet("{id}")]
         public async Task<ActionResult<AdmMenu>> GetAdmMenu(long id)
         {
-            var admMenu = await _context.AdmMenus.FindAsync(id);
+            var admMenu = await _service.FindById(id);
 
             if (admMenu == null)
             {
                 return NotFound();
-            } else {
-                _service.SetTransient(admMenu);
             }
 
             return admMenu;
@@ -72,22 +64,11 @@ namespace hefesto_dotnet_webapi.admin.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(admMenu).State = EntityState.Modified;
+            var updated = await _service.Update(id, admMenu);
 
-            try
+            if (!updated)
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!AdmMenuExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return NotFound();
             }
 
             return NoContent();
@@ -98,21 +79,11 @@ namespace hefesto_dotnet_webapi.admin.Controllers
         [HttpPost]
         public async Task<ActionResult<AdmMenu>> PostAdmMenu(AdmMenu admMenu)
         {
-            _context.AdmMenus.Add(admMenu);
-            try
+            var created = await _service.Insert(admMenu);
+
+            if (created == null)
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateException)
-            {
-                if (AdmMenuExists(admMenu.Id))
-                {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
+                return Conflict();
             }
 
             return CreatedAtAction("GetAdmMenu", new { id = admMenu.Id }, admMenu);
@@ -122,21 +93,14 @@ namespace hefesto_dotnet_webapi.admin.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAdmMenu(long id)
         {
-            var admMenu = await _context.AdmMenus.FindAsync(id);
-            if (admMenu == null)
+            var deleted = await _service.Delete(id);
+            if (!deleted)
             {
                 return NotFound();
             }
 
-            _context.AdmMenus.Remove(admMenu);
-            await _context.SaveChangesAsync();
-
             return NoContent();
         }
 
-        private bool AdmMenuExists(long id)
-        {
-            return _context.AdmMenus.Any(e => e.Id == id);
-        }
     }
 }

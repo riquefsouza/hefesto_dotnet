@@ -41,6 +41,7 @@ namespace hefesto_dotnet_mvc
             services.AddScoped<IAdmParameterService, AdmParameterService>();
             services.AddScoped<IAdmProfileService, AdmProfileService>();
             services.AddScoped<IChangePasswordService, ChangePasswordService>();
+            services.AddScoped<IMessageService, MessageService>();
 
             services.AddHttpContextAccessor();
             services.AddSingleton<IUriService>(o =>

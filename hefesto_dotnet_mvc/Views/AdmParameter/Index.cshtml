@@ -17,7 +17,7 @@
         </div>
         <div class="card-body">
             <div class="row">
-                panelReport
+                @{await Html.RenderPartialAsync("PanelReport", ViewData["ListReportType"]);}
             </div>
         </div>
     </div>
@@ -79,8 +79,8 @@
                 <th style="display: none">Id</th>
                 <th style="width: 200px;">Parameter Category</th>
                 <th>Parameter</th>
-                <th>Value</th>
-                <th>Description</th>
+                <th>@Html.DisplayNameFor(model => model.Value)</th>
+                <th>@Html.DisplayNameFor(model => model.Description)</th>
             </tr>
         </thead>
         <tbody>
@@ -90,8 +90,8 @@
                     <td style="display: none">@item.Id</td>
                     <td>@item.AdmParameterCategory.Description</td>
                     <td>@item.Code</td>
-                    <td>@item.Value</td>
-                    <td>@item.Description</td>
+                    <td>@Html.DisplayFor(modelItem => item.Value)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Description)</td>
                 </tr>
             }
         </tbody>

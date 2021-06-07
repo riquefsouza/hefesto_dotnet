@@ -67,9 +67,103 @@ namespace hefesto.admin.Services
                 .Take(validFilter.size)
                 .ToListAsync();
             var totalRecords = await _context.AdmMenus.CountAsync();
+            this.SetTransient(pagedData);
 
             return new BasePaged<AdmMenu>(pagedData,
                 BasePaging.of(validFilter, totalRecords, _uriService, route));
+        }
+
+        public async Task<List<AdmMenu>> FindAll()
+        {
+            var listObj = await _context.AdmMenus.ToListAsync();
+            this.SetTransient(listObj);
+            return listObj;
+        }
+
+        public async Task<AdmMenu> FindById(long? id)
+        {
+            var obj = await _context.AdmMenus.FindAsync(id);
+
+            if (obj != null)
+            {
+                this.SetTransient(obj);
+            }
+
+            return obj;
+        }
+
+        public async Task<bool> Update(long id, AdmMenu obj)
+        {
+            _context.Entry(obj).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!this.Exists(id))
+                {
+                    return false;
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return true;
+        }
+
+        public async Task<AdmMenu> Insert(AdmMenu obj)
+        {
+            obj.Id = this.GetNextSequenceValue();
+
+            _context.AdmMenus.Add(obj);
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateException)
+            {
+                if (this.Exists(obj.Id))
+                {
+                    return null;
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return obj;
+        }
+
+        public async Task<bool> Delete(long id)
+        {
+            var obj = await _context.AdmMenus.FindAsync(id);
+            if (obj == null)
+            {
+                return false;
+            }
+
+            _context.AdmMenus.Remove(obj);
+            await _context.SaveChangesAsync();
+
+            return true;
+        }
+
+        public bool Exists(long id)
+        {
+            return _context.AdmMenus.Any(e => e.Id == id);
+        }
+
+        private long GetNextSequenceValue()
+        {
+            var rawQuery = _context.Set<SequenceValue>().FromSqlRaw("select nextval('public.adm_menu_seq') as Value;");
+            var nextVal = rawQuery.AsEnumerable().First().Value;
+
+            return nextVal;
         }
     }
 }

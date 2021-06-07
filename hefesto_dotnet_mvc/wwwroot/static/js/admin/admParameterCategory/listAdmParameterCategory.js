@@ -4,6 +4,7 @@ class ListAdmParameterCategory extends HFSSystemUtil {
 		super();
 		
 		this.hideQueryString();
+		this._page = $('#admParameterCategoryView');
 		
 		this._paginationNumber = $('#admParameterCategory_paginationNumber');
 		this._paginationSize = $('#admParameterCategory_paginationSize');
@@ -49,7 +50,8 @@ class ListAdmParameterCategory extends HFSSystemUtil {
 	
 	btnAddClick(event) {
 		event.preventDefault();
-		window.location.href=this._url.replace("View", "View/add");
+		this._form[0].action += '/0';
+		this._formListAdmParameterCategory.submit();
 	}
 		
 	btnEditClick(event) {
@@ -89,13 +91,14 @@ class ListAdmParameterCategory extends HFSSystemUtil {
 			
 			$.ajax({
 				method: "DELETE",
-				url: window.location.href + "/" + selectedRow.id,
+				url: window.location.href + "/Delete/" + selectedRow.id,
 				dataType: "json",
 			    contentType: "application/json; charset=utf-8",								
 		        context: this
 			})
-			.done(function() {
-				this._tableList[0].deleteRow(tableRow);
+			.done(function () {
+				var tableRow = $('.selected')[0];
+				this._tableList[0].deleteRow(tableRow.rowIndex);
         	})
 			.fail(function(xhr){
 	            //alert("An error occured DELETE: " + xhr.status + " " + xhr.statusText);
@@ -108,8 +111,7 @@ class ListAdmParameterCategory extends HFSSystemUtil {
 
 	btnBackClick(event) {
 		event.preventDefault();
-		
-		this.removePersistedObj(this.systemObjKEY);
+				
 		this._anchorHomePage[0].click();
 	}
 
@@ -125,8 +127,9 @@ class ListAdmParameterCategory extends HFSSystemUtil {
 		
 		this.systemObj = new HFSSystemObject(this._paginationNumber[0].value, paginationSize,
 			this._paginationSort[0].value, this._columnOrder[0].value, this._columnTitle[0].value);
-		
-		this.sysCmbPaginationSizeChange(this.systemObj);
+
+		var url = this._page[0];
+		this.sysCmbPaginationSizeChange(this.systemObj, url);
 	}
 		
 	tableHeaderColumnClick(tableColumn, columnOrder, columnTitle){
@@ -134,7 +137,8 @@ class ListAdmParameterCategory extends HFSSystemUtil {
 		this.systemObj = new HFSSystemObject(this._paginationNumber[0].value, this._paginationSize[0].value,
 			this._paginationSort[0].value, columnOrder, columnTitle);
 
-		this.sysTableHeaderColumnClick(this.systemObj, tableColumn);
+		var url = this._page[0];
+		this.sysTableHeaderColumnClick(this.systemObj, tableColumn, url);
 	}	
 }
 

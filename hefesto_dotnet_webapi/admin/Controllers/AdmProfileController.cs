@@ -19,21 +19,18 @@ namespace hefesto_dotnet_webapi.admin.Controllers
     [ApiController]
     public class AdmProfileController : ControllerBase
     {
-        private readonly dbhefestoContext _context;
         private readonly IAdmProfileService _service;
 
-        public AdmProfileController(dbhefestoContext context, IAdmProfileService service)
+        public AdmProfileController(IAdmProfileService service)
         {
-            _context = context;
             _service = service;
         }
 
         [HttpGet("paged")]
-        public async Task<ActionResult<IEnumerable<AdmProfile>>> listPaged([FromQuery] PaginationFilter filter)
+        public async Task<ActionResult<BasePaged<AdmProfile>>> ListPaged([FromQuery] PaginationFilter filter)
         {
             var route = Request.Path.Value;
             var pagedData = await _service.GetPage(route, filter);
-            _service.SetTransient(pagedData.page);
             return Ok(pagedData);
         }
 
@@ -41,22 +38,18 @@ namespace hefesto_dotnet_webapi.admin.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<AdmProfile>>> GetAdmProfiles()
         {
-            var listAdmProfile = await _context.AdmProfiles.ToListAsync();
-            _service.SetTransient(listAdmProfile);
-            return listAdmProfile;
+            return await _service.FindAll();
         }
 
         // GET: api/AdmProfile/5
         [HttpGet("{id}")]
         public async Task<ActionResult<AdmProfile>> GetAdmProfile(long id)
         {
-            var admProfile = await _context.AdmProfiles.FindAsync(id);
+            var admProfile = await _service.FindById(id);
 
             if (admProfile == null)
             {
                 return NotFound();
-            } else {
-                _service.SetTransient(admProfile);
             }
 
             return admProfile;
@@ -72,22 +65,11 @@ namespace hefesto_dotnet_webapi.admin.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(admProfile).State = EntityState.Modified;
+            var updated = await _service.Update(id, admProfile);
 
-            try
+            if (!updated)
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!AdmProfileExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return NotFound();
             }
 
             return NoContent();
@@ -98,21 +80,11 @@ namespace hefesto_dotnet_webapi.admin.Controllers
         [HttpPost]
         public async Task<ActionResult<AdmProfile>> PostAdmProfile(AdmProfile admProfile)
         {
-            _context.AdmProfiles.Add(admProfile);
-            try
+            var created = await _service.Insert(admProfile);
+
+            if (created == null)
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateException)
-            {
-                if (AdmProfileExists(admProfile.Id))
-                {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
+                return Conflict();
             }
 
             return CreatedAtAction("GetAdmProfile", new { id = admProfile.Id }, admProfile);
@@ -122,36 +94,28 @@ namespace hefesto_dotnet_webapi.admin.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAdmProfile(long id)
         {
-            var admProfile = await _context.AdmProfiles.FindAsync(id);
-            if (admProfile == null)
+            var deleted = await _service.Delete(id);
+            if (!deleted)
             {
                 return NotFound();
             }
 
-            _context.AdmProfiles.Remove(admProfile);
-            await _context.SaveChangesAsync();
-
             return NoContent();
-        }
-
-        private bool AdmProfileExists(long id)
-        {
-            return _context.AdmProfiles.Any(e => e.Id == id);
         }
 
         [HttpGet("mountMenu")]
         public async Task<ActionResult<IEnumerable<MenuItemDTO>>> mountMenu(List<long> listaIdProfile){
-            return await _service.mountMenuItem(listaIdProfile);
+            return await _service.MountMenuItem(listaIdProfile);
         }
         
         [HttpGet("findProfilesByPage/{pageId}")]
         public async Task<ActionResult<IEnumerable<AdmProfile>>> findProfilesByPage(long pageId) {		
-            return await _service.findProfilesByPage(pageId);
+            return await _service.FindProfilesByPage(pageId);
         }
         
         [HttpGet("findProfilesByUser/{userId}")]
         public async Task<ActionResult<IEnumerable<AdmProfile>>> findProfilesByUser(long userId) {		
-            return await _service.findProfilesByUser(userId);
+            return await _service.FindProfilesByUser(userId);
     	}
 
     }

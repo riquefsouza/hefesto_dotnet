@@ -18,21 +18,18 @@ namespace hefesto_dotnet_webapi.admin.Controllers
     [ApiController]
     public class AdmPageController : ControllerBase
     {
-        private readonly dbhefestoContext _context;
         private readonly IAdmPageService _service;
 
-        public AdmPageController(dbhefestoContext context, IAdmPageService service)
+        public AdmPageController(IAdmPageService service)
         {
-            _context = context;
             _service = service;
         }
 
         [HttpGet("paged")]
-        public async Task<ActionResult<IEnumerable<AdmPage>>> listPaged([FromQuery] PaginationFilter filter)
+        public async Task<ActionResult<BasePaged<AdmPage>>> ListPaged([FromQuery] PaginationFilter filter)
         {
             var route = Request.Path.Value;
             var pagedData = await _service.GetPage(route, filter);
-            _service.SetTransient(pagedData.page);
             return Ok(pagedData);
         }
 
@@ -40,22 +37,18 @@ namespace hefesto_dotnet_webapi.admin.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<AdmPage>>> GetAdmPages()
         {
-            var listAdmPage = await _context.AdmPages.ToListAsync();
-            _service.SetTransient(listAdmPage);
-            return listAdmPage;
+            return await _service.FindAll();
         }
 
         // GET: api/AdmPage/5
         [HttpGet("{id}")]
         public async Task<ActionResult<AdmPage>> GetAdmPage(long id)
         {
-            var admPage = await _context.AdmPages.FindAsync(id);
+            var admPage = await _service.FindById(id);
 
             if (admPage == null)
             {
                 return NotFound();
-            } else {
-                _service.SetTransient(admPage);
             }
 
             return admPage;
@@ -71,22 +64,11 @@ namespace hefesto_dotnet_webapi.admin.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(admPage).State = EntityState.Modified;
+            var updated = await _service.Update(id, admPage);
 
-            try
+            if (!updated)
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!AdmPageExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return NotFound();
             }
 
             return NoContent();
@@ -97,21 +79,11 @@ namespace hefesto_dotnet_webapi.admin.Controllers
         [HttpPost]
         public async Task<ActionResult<AdmPage>> PostAdmPage(AdmPage admPage)
         {
-            _context.AdmPages.Add(admPage);
-            try
+            var created = await _service.Insert(admPage);
+
+            if (created == null)
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateException)
-            {
-                if (AdmPageExists(admPage.Id))
-                {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
+                return Conflict();
             }
 
             return CreatedAtAction("GetAdmPage", new { id = admPage.Id }, admPage);
@@ -121,21 +93,14 @@ namespace hefesto_dotnet_webapi.admin.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAdmPage(long id)
         {
-            var admPage = await _context.AdmPages.FindAsync(id);
-            if (admPage == null)
+            var deleted = await _service.Delete(id);
+            if (!deleted)
             {
                 return NotFound();
             }
 
-            _context.AdmPages.Remove(admPage);
-            await _context.SaveChangesAsync();
-
             return NoContent();
         }
 
-        private bool AdmPageExists(long id)
-        {
-            return _context.AdmPages.Any(e => e.Id == id);
-        }
     }
 }

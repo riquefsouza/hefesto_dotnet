@@ -1,52 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 using hefesto.admin.Models;
 using hefesto.admin.Services;
-using Microsoft.Extensions.Configuration;
-using Microsoft.AspNetCore.Localization;
-using Microsoft.AspNetCore.Mvc.Localization;
+using hefesto.base_hefesto.Services;
+using hefesto.base_hefesto.Report;
 
 namespace hefesto_dotnet_mvc.Controllers
 {
-    public class AdmParameterController : Controller
+    public class AdmParameterController : BaseViewReportController
     {
-        private readonly dbhefestoContext _context;
-
         private readonly IAdmParameterService _service;
 
         private readonly IAdmParameterCategoryService _serviceParameterCategory;
 
-        public readonly IConfiguration _configuration;
+        private readonly IMessageService _messageService;
 
-        private List<IConfigurationSection> _messages;
-
-        private readonly IHtmlLocalizer<AdmParameterController> _localizer;
-
-        public AdmParameterController(dbhefestoContext context, IAdmParameterService service,
+        public AdmParameterController(IAdmParameterService service,
             IAdmParameterCategoryService serviceParameterCategory,
-            IConfiguration configuration, IHtmlLocalizer<AdmParameterController> localizer)
+            IMessageService messageService): base(messageService)
         {
-            _context = context;
             _service = service;
             _serviceParameterCategory = serviceParameterCategory;
-            _localizer = localizer;
-            _configuration = configuration;
-
-            _messages = _configuration.GetSection("Messages_pt_BR").GetChildren().ToList();
-        }
-
-        private void LoadMessages()
-        {
-            foreach (var msg in _messages)
-            {
-                ViewData[msg.Key] = msg.Value;
-            }
-
+            _messageService = messageService;
         }
 
         private async void LoadAdmParameterCategory()

@@ -349,18 +349,18 @@ class HFSSystemUtil {
         }  		  		  		
 	}	
 	
-	sysCmbPaginationSizeChange(systemObj) {
+	sysCmbPaginationSizeChange(systemObj, url) {
 		this.dangerHide();
 				
 		if (systemObj && systemObj.getPaginationNumber() && systemObj.getPaginationSize() > 0) {
-			window.location.href = window.location.href + "?pageNumber=1&size=" + systemObj.getPaginationSize() 
+			window.location.href = url + "?pageNumber=1&size=" + systemObj.getPaginationSize()
 			+ "&sort=" + systemObj.getPaginationSort() 
 			+ "&columnOrder=" + systemObj.getColumnOrder() 
 			+ "&columnTitle=" + systemObj.getColumnTitle();
 		}
 	}	
 	
-	sysTableHeaderColumnClick(systemObj, tableColumn){
+	sysTableHeaderColumnClick(systemObj, tableColumn, url){
 		var up=systemObj.getColumnTitle() + "  <i class='fas fa-sort-alpha-up fa-sm'></i>";
 		var down=systemObj.getColumnTitle() + "  <i class='fas fa-sort-alpha-down fa-sm'></i>";
 		
@@ -377,7 +377,7 @@ class HFSSystemUtil {
 		if (systemObj && systemObj.getPaginationNumber() && systemObj.getPaginationSize() > 0) {
 			systemObj.setPaginationSort(paginationSort);
 		
-			window.location.href = window.location.href + "?pageNumber=" + systemObj.getPaginationNumber() 
+			window.location.href = url + "?pageNumber=" + systemObj.getPaginationNumber()
 			+ "&size=" + systemObj.getPaginationSize() 
 			+ "&sort=" + systemObj.getPaginationSort() 
 			+ "&columnOrder=" + systemObj.getColumnOrder() 
