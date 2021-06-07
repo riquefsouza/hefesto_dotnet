@@ -3,12 +3,12 @@
 @model AdmParameter
 
 @{
-    ViewData["Title"] = "List";
+    ViewData["Title"] = "Edit";
 }
 
 <!-- =================================================================================== -->
 
-<form id="formEditAdmParameter" style="padding: 5px;" asp-action="Save">
+<form id="formEditAdmParameter" style="padding: 5px;" asp-action="Save" method="post">
 
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <input type="hidden" asp-for="Id" />

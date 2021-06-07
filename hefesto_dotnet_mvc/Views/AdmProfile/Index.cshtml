@@ -1,6 +1,6 @@
-﻿@using hefesto.admin.Models
+@using hefesto.admin.Models
 
-@model IEnumerable<AdmParameter>
+@model IEnumerable<AdmProfile>
 
 @{
     ViewData["Title"] = "List";
@@ -8,11 +8,11 @@
 
 <!-- =================================================================================== -->
 
-<form id="formListAdmParameter" style="padding: 5px;" asp-action="Edit" method="get">
+<form id="formListAdmProfile" style="padding: 5px;" asp-action="Edit" method="get">
 
     <div class="card">
         <div class="card-header" style="font-weight: bold;font-size: large;">
-            <span id="formTitle">@ViewData["listAdmParameter.title"]</span>
+            <span id="formTitle">@ViewData["listAdmProfile.title"]</span>
         </div>
         <div class="card-body">
             <div class="row">
@@ -53,7 +53,7 @@
             <span class="text">@ViewData["button.back"]</span>
         </button>
     </div>
-    
+
     <div class="modal fade" id="dlgDeleteConfirmation" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -72,35 +72,29 @@
         </div>
     </div>
 
-    <table class="table table-striped table-bordered" id="tableAdmParameter" style="width: 100%">
+    <table class="table table-striped table-bordered" id="tableAdmProfile" style="width: 100%">
         <thead>
             <tr>
                 <th style="display: none">Id</th>
-                <th style="width: 200px;">Parameter Category</th>
-                <th>Parameter</th>
-                <th>@Html.DisplayNameFor(model => model.Value)</th>
-                <th>@Html.DisplayNameFor(model => model.Description)</th>
+                <th style="width:25%">Description</th>
+                <th>Users</th>
             </tr>
         </thead>
         <tbody>
             @foreach (var item in Model)
             {
-                <tr id="@item.Id" onclick="listAdmParameter.tableRowClick(this);">
+                <tr id="@item.Id" onclick="listAdmProfile.tableRowClick(this);">
                     <td style="display: none">@item.Id</td>
-                    <td>@item.AdmParameterCategory.Description</td>
-                    <td>@item.Code</td>
-                    <td>@Html.DisplayFor(modelItem => item.Value)</td>
-                    <td>@Html.DisplayFor(modelItem => item.Description)</td>
+                    <td>@item.Description</td>
+                    <td>@item.AdmUsers</td>
                 </tr>
             }
         </tbody>
     </table>
 
-    <br>
-    <br>
-
 </form>
 
-<script src="~/static/js/admin/admParameter/listAdmParameter.js"></script>
+<script src="~/static/js/admin/admProfile/listAdmProfile.js"></script>
 
 <!-- =================================================================================== -->
+
