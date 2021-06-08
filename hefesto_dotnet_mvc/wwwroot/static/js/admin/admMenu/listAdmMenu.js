@@ -37,7 +37,8 @@ class ListAdmMenu extends HFSSystemUtil {
 	
 	btnAddClick(event) {
 		event.preventDefault();
-		window.location.href=this._url.replace("View", "View/add");
+		this._form[0].action += '/0';
+		this._formListAdmPage.submit();
 	}
 	
 	btnEditClick(event) {
@@ -77,7 +78,7 @@ class ListAdmMenu extends HFSSystemUtil {
 			
 			$.ajax({
 				method: "DELETE",
-				url: window.location.href + "/" + nodeId,
+				url: window.location.href + "/Delete/" + nodeId,
 				dataType: "json",
 			    contentType: "application/json; charset=utf-8",								
 		        context: this

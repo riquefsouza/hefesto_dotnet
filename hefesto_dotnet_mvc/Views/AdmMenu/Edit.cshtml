@@ -1,0 +1,115 @@
+@using hefesto.admin.Models
+
+@model AdmMenu
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<!-- =================================================================================== -->
+
+<form id="formEditAdmMenu" style="padding: 5px;" asp-action="Save" method="post">
+
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <input type="hidden" asp-for="Id" />
+
+    <div class="card">
+        <div class="card-header"
+             style="font-weight: bold;font-size: large;">
+            @ViewData["editAdmMenu.title"]
+        </div>
+        <div class="card-body">
+            <div class="form-actions">
+                <button type="submit" class="btn btn-success" id="btnSave">
+                    <span class="icon text-white-50">
+                        <i class="fa fa-check-circle"></i>
+                    </span>
+                    <span class="text">@ViewData["button.save"]</span>
+                </button>
+
+                <button type="reset" class="btn btn-light" id="btnReset">
+                    <span class="icon text-gray-600">
+                        <i class="fa fa-eraser"></i>
+                    </span>
+                    <span class="text">@ViewData["button.reset"]</span>
+                </button>
+
+                <button type="button" class="btn btn-primary" id="btnCancel">
+                    <span class="icon text-white-50">
+                        <i class="fa fa-times-circle"></i>
+                    </span>
+                    <span class="text">@ViewData["button.cancel"]</span>
+                </button>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4 form-group mb-2">
+                    <input type="hidden" id="admMenu_id" th:field="*{id}" />
+
+                    <label asp-for="IdPage">@ViewData["editAdmMenu.page"]</label>
+                    <select asp-for="IdPage" class="form-select">
+                        @foreach (var itemPage in (IEnumerable<AdmMenu>)@ViewData["listAdmPages"])
+                        {
+                            @if (@Model != null && (itemPage.Id == @Model.IdPage))
+                            {
+                                <option value="@itemPage.Id" selected>@itemPage.Description</option>
+                            }
+                            else
+                            {
+                                <option value="@itemPage.Id">@itemPage.Description</option>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12 form-group mb-2">
+                    <label asp-for="Description">@ViewData["editAdmMenu.description"]</label>
+                    <input type="text" class="form-control" asp-for="Description" maxlength="255" required="required" />
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4 form-group mb-2">
+                    <label asp-for="IdMenuParent">@ViewData["editAdmMenu.menuParent"]</label>
+                    <select asp-for="IdMenuParent" class="form-select">
+                        @foreach (var itemMenuParent in (IEnumerable<AdmMenu>)@ViewData["listAdmMenuParents"])
+                        {
+                            @if (@Model != null && (itemMenuParent.Id == @Model.IdMenuParent))
+                            {
+                                <option value="@itemMenuParent.Id" selected>@itemMenuParent.Description</option>
+                            }
+                            else
+                            {
+                                <option value="@itemMenuParent.Id">@itemMenuParent.Description</option>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-2 form-group mb-2">
+                    <label asp-for="Order">@ViewData["editAdmMenu.order"]</label>
+                    <input type="text" class="form-control" asp-for="Order" maxlength="10" required="required" />
+                    <span asp-validation-for="Order" class="text-danger"></span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <br>
+    <br>
+</form>
+
+<script src="~/static/js/admin/admMenu/editAdmMenu.js"></script>
+
+<!-- =================================================================================== -->
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+

@@ -50,7 +50,7 @@
                                 <li>
                                     @foreach (var submenu in menu.Item)
                                     {
-                                        <a class="dropdown-item" id="@submenu.View" href="@submenu.Name">
+                                        <a class="dropdown-item" id="@submenu.View" asp-area="" asp-controller="@submenu.Name" asp-action="Index">
                                             @submenu.Label
                                         </a>
                                     }

@@ -35,6 +35,8 @@
   <ItemGroup>
     <Folder Include="Views\AdmParameterCategory\" />
     <Folder Include="Views\AdmProfile\" />
+    <Folder Include="Views\AdmPage\" />
+    <Folder Include="Views\AdmMenu\" />
   </ItemGroup>
 
 </Project>

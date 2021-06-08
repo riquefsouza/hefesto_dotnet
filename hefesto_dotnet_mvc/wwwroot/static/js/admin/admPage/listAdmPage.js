@@ -15,7 +15,7 @@ class ListAdmPage extends HFSSystemUtil {
 		this._tableList = $('#tableAdmPage');
 		this._dataTableList = this._tableList.DataTable( {
 	        "dom": '<"top"flp>rt<"bottom"i><"clear">',
-	        "language": { "url": '/js/hfsframework/dataTables.pt_br.json' }
+			"language": { "url": this.dataTablesLanguageURL }
 	    } );			 
 	    this._selectedRow = '#tableAdmPage tbody tr.selected';
 		
@@ -40,7 +40,8 @@ class ListAdmPage extends HFSSystemUtil {
 	
 	btnAddClick(event) {
 		event.preventDefault();
-		window.location.href=this._url.replace("View", "View/add");
+		this._form[0].action += '/0';
+		this._formListAdmPage.submit();
 	}
 	
 	btnEditClick(event) {
@@ -80,7 +81,7 @@ class ListAdmPage extends HFSSystemUtil {
 			
 			$.ajax({
 				method: "DELETE",
-				url: window.location.href + "/" + selectedRow.id,
+				url: window.location.href + "/Delete/" + selectedRow.id,
 				dataType: "json",
 			    contentType: "application/json; charset=utf-8",								
 		        context: this
