@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using hefesto.admin.Models;
+using hefesto.admin.VO;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using hefesto.base_hefesto.Pagination;
@@ -174,5 +175,47 @@ namespace hefesto.admin.Services
             model.Password = BC.HashPassword(model.Password);
         }
 
+        private List<UserVO> ToVO(List<AdmUser> listaOrigem)
+        {
+            List<UserVO> lista = new List<UserVO>();
+            foreach (AdmUser item in listaOrigem)
+            {
+                lista.Add(item.ToUserVO());
+            }
+            return lista;
+        }
+
+        public List<AdmUser> FindAdmUserByLikeEmail(string email)
+        {
+            var query = _context.AdmUsers.AsQueryable();
+            query = _context.AdmUsers.Where(adm => adm.Email.Contains(email)).Distinct();
+            return query.ToList();
+        }
+
+        public List<UserVO> FindByLikeEmail(string email)
+        {
+            List<AdmUser> listaOrigem = this.FindAdmUserByLikeEmail(email);
+            List<UserVO> lista = ToVO(listaOrigem);
+
+            return lista;
+        }
+
+        public async Task<AdmUser> GetUser(string login, string name, string email, bool auditar)
+        {
+            AdmUser user;
+            user = new AdmUser();
+            user.Id = -1;
+            user.Login = login;
+            user.Name = name;
+            user.Email = email;
+            //user.Ip = ;
+
+            if (auditar)
+            {
+                await this.Insert(user);
+            }
+
+            return user;
+        }
     }
 }

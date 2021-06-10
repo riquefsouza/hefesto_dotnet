@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using hefesto.base_hefesto.Pagination;
 using hefesto.base_hefesto.Services;
-using hefesto.base_hefesto.Models;
+using hefesto.admin.VO;
 
 namespace hefesto.admin.Services
 {
@@ -15,19 +15,16 @@ namespace hefesto.admin.Services
         private readonly dbhefestoContext _context;
         private readonly IAdmPageProfileService _servicePageProfile;
         private readonly IAdmUserProfileService _serviceUserProfile;
-        private readonly IAdmMenuService _serviceMenu;
+        
         private readonly IUriService _uriService;
 
         public AdmProfileService(dbhefestoContext context, IUriService uriService,
-            IAdmPageProfileService servicePageProfile, 
-            IAdmUserProfileService serviceUserProfile,
-            IAdmMenuService serviceMenu)
+            IAdmPageProfileService servicePageProfile, IAdmUserProfileService serviceUserProfile)
         {
             _context = context;
             _uriService = uriService;
             _servicePageProfile = servicePageProfile;
             _serviceUserProfile = serviceUserProfile;
-            _serviceMenu = serviceMenu;
         }
 
         public async Task<List<AdmProfile>> FindProfilesByPage(long pageId)
@@ -177,6 +174,46 @@ namespace hefesto.admin.Services
             var nextVal = rawQuery.AsEnumerable().First().Value;
 
             return nextVal;
+        }
+
+        public List<AdmProfile> FindByGeneral(bool geral)
+        {
+            var query = _context.AdmProfiles.AsQueryable();
+            query = _context.AdmProfiles.Where(adm => adm.General == geral).Distinct();
+            return query.ToList();
+        }
+
+        public async Task<List<PermissionVO>> GetPermission(AuthenticatedUserVO authenticatedUser)
+        {
+            List<PermissionVO> lista = new List<PermissionVO>();
+            PermissionVO permission;
+
+            AdmUser admUser = new AdmUser(authenticatedUser.User);
+            List<AdmProfile> profiles = await this.FindProfilesByUser(admUser.Id);
+            List<AdmProfile> perfisGeral = this.FindByGeneral(true);
+            foreach (AdmProfile perfilGeral in perfisGeral)
+            {
+                if (!profiles.Contains(perfilGeral))
+                {
+                    profiles.Add(perfilGeral);
+                }
+            }
+
+            foreach (AdmProfile profile in profiles)
+            {
+                permission = new PermissionVO();
+
+                permission.Profile = profile.ToProfileVO();
+
+                foreach (AdmPage admPage in profile.AdmPages)
+                {
+                    permission.Pages.Add(admPage.ToPageVO());
+                }
+
+                lista.Add(permission);
+            }
+
+            return lista;
         }
 
     }

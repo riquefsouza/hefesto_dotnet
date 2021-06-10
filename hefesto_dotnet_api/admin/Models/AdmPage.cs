@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
+using hefesto.admin.VO;
 
 #nullable disable
 
@@ -35,5 +36,29 @@ namespace hefesto.admin.Models
         [NotMapped]
         public string PageProfiles { get; set; }
 
+        public String PerfisPage()
+        {
+            String ret = "";
+            foreach (AdmPageProfile item in this.AdmPageProfiles)
+            {
+                ret = ret + item.AdmProfile.Description + ", ";
+            }
+            if (ret != "")
+            {
+                ret = ret.Substring(0, ret.Length - 2);
+            }
+            return ret;
+        }
+
+        public PageVO ToPageVO()
+        {
+            PageVO p = new PageVO();
+
+            p.Id = this.Id;
+            p.Description = this.Description;
+            p.Url = this.Url;
+
+            return p;
+        }
     }
 }

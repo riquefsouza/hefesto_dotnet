@@ -156,5 +156,22 @@ namespace hefesto.admin.Services
             return nextVal;
         }
 
+        public string GetValueByCode(string scode)
+        {
+            try
+            {
+                var svalue =
+                from p in _context.AdmParameters
+                where p.Code == scode
+                select p.Value;
+
+                return svalue.Distinct().First();
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
     }
 }

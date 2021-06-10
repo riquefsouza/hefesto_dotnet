@@ -43,6 +43,7 @@ namespace hefesto_dotnet_mvc
             services.AddScoped<IChangePasswordService, ChangePasswordService>();
             services.AddScoped<IMessageService, MessageService>();
             services.AddScoped<ISystemService, SystemService>();
+            services.AddScoped<IModeTestService, ModeTestService>();
 
             services.AddHttpContextAccessor();
             services.AddSingleton<IUriService>(o =>
@@ -51,6 +52,15 @@ namespace hefesto_dotnet_mvc
                 var request = accessor.HttpContext.Request;
                 var uri = string.Concat(request.Scheme, "://", request.Host.ToUriComponent());
                 return new UriService(uri);
+            });
+
+            services.AddDistributedMemoryCache();
+
+            services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromMinutes(30);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
             });
 
             services.AddControllersWithViews();
@@ -90,6 +100,8 @@ namespace hefesto_dotnet_mvc
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseSession();
 
             app.UseEndpoints(endpoints =>
             {

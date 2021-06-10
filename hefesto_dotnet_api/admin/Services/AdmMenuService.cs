@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using hefesto.base_hefesto.Pagination;
 using hefesto.base_hefesto.Services;
+using hefesto.admin.VO;
 
 namespace hefesto.admin.Services
 {
@@ -39,7 +40,7 @@ namespace hefesto.admin.Services
             item.AdmPage = _context.AdmPages.Find(item.IdPage);
             item.AdmMenuParent = _context.AdmMenus.Find(item.IdMenuParent); 
             item.Url = item.AdmPage != null ? item.AdmPage.Url : null;
-            item.InverseAdmMenuParent = subMenus;
+            item.AdmSubMenus = subMenus;
         }
         public void SetTransient(AdmMenu item)
         {
@@ -165,5 +166,17 @@ namespace hefesto.admin.Services
 
             return nextVal;
         }
+
+        public List<MenuVO> ToListMenuVO(List<AdmMenu> listaMenu)
+        {
+            List<MenuVO> lista = new List<MenuVO>();
+            foreach (AdmMenu menu in listaMenu)
+            {
+                lista.Add(menu.ToMenuVO());
+            }
+            return lista;
+        }
+
+
     }
 }

@@ -5,9 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Mvc;
-using hefesto.admin.Services;
+using hefesto.admin.VO;
 using hefesto.base_hefesto.Services;
 using hefesto.base_hefesto.Models;
+using hefesto.base_hefesto.Util;
 
 namespace hefesto.base_hefesto
 {
@@ -38,6 +39,16 @@ namespace hefesto.base_hefesto
 
             ViewData["MenuItem"] = await _systemService.MountMenuItem(listaIdProfile);
 
+        }
+
+        public AuthenticatedUserVO GetAuthenticatedUser()
+        {
+            return HttpContext.Session.Get<AuthenticatedUserVO>("authenticatedUser");
+        }
+
+        public void SetUserAuthenticated(AuthenticatedUserVO usu)
+        {
+            HttpContext.Session.Set<AuthenticatedUserVO>("authenticatedUser", usu);
         }
 
     }

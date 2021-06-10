@@ -65,7 +65,7 @@ namespace hefesto.admin.Models
                     .HasConstraintName("adm_menu_page_fkey");
 
                 entity.HasOne(d => d.AdmMenuParent)
-                    .WithMany(p => p.InverseAdmMenuParent)
+                    .WithMany(p => p.AdmSubMenus)
                     .HasForeignKey(d => d.IdMenuParent)
                     .HasConstraintName("adm_menu_parent_fkey");
 
@@ -204,7 +204,8 @@ namespace hefesto.admin.Models
                     .ValueGeneratedNever()
                     .HasColumnName("prf_seq");
 
-                entity.Property(e => e.Administrator)
+                entity.Property(e => e.AdministratorChar)
+                    .IsRequired()
                     .HasMaxLength(1)
                     .HasColumnName("prf_administrator")
                     .HasDefaultValueSql("'N'::bpchar");
@@ -214,7 +215,8 @@ namespace hefesto.admin.Models
                     .HasMaxLength(255)
                     .HasColumnName("prf_description");
 
-                entity.Property(e => e.General)
+                entity.Property(e => e.GeneralChar)
+                    .IsRequired()
                     .HasMaxLength(1)
                     .HasColumnName("prf_general")
                     .HasDefaultValueSql("'N'::bpchar");
@@ -243,7 +245,8 @@ namespace hefesto.admin.Models
                     .ValueGeneratedNever()
                     .HasColumnName("usu_seq");
 
-                entity.Property(e => e.Active)
+                entity.Property(e => e.ActiveChar)
+                    .IsRequired()
                     .HasMaxLength(1)
                     .HasColumnName("usu_active")
                     .HasDefaultValueSql("'N'::bpchar");

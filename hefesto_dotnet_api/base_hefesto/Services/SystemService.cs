@@ -3,24 +3,36 @@ using System.Linq;
 using System.Collections.Generic;
 using hefesto.admin.Models;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using hefesto.base_hefesto.Models;
 using hefesto.admin.Services;
+using hefesto.admin.VO;
 
 namespace hefesto.base_hefesto.Services
 {
     public class SystemService : ISystemService
     {
         private readonly dbhefestoContext _context;
-        private readonly IAdmMenuService _serviceMenu;
+        private readonly ILogger<SystemService> logger;
+        private readonly IAdmMenuService serviceMenu;
 
-        public SystemService(dbhefestoContext context, IAdmMenuService serviceMenu)
+        private AuthenticatedUserVO authenticatedUser;
+        
+        private readonly IAdmUserService userService;
+
+        private readonly IModeTestService modeTestService;
+
+        public SystemService(dbhefestoContext context, ILogger<SystemService> logger, IAdmMenuService serviceMenu, 
+            IModeTestService modeTestService, IAdmUserService userService)
         {
             _context = context;
-            _serviceMenu = serviceMenu;
+            this.logger = logger;
+            this.serviceMenu = serviceMenu;
+            this.modeTestService = modeTestService;
+            this.userService = userService;
         }
 
-        public List<AdmMenu> findMenuByIdProfiles(List<long> listaIdProfile, AdmMenu admMenu)
+        public List<AdmMenu> FindMenuByIdProfiles(List<long> listaIdProfile, AdmMenu admMenu)
         {
             /*
             findMenuByIdProfiles:
@@ -47,7 +59,7 @@ namespace hefesto.base_hefesto.Services
             return lista;
         }
 
-        public List<AdmMenu> findAdminMenuByIdProfiles(List<long> listaIdProfile, AdmMenu admMenu)
+        public List<AdmMenu> FindAdminMenuByIdProfiles(List<long> listaIdProfile, AdmMenu admMenu)
         {
             /*
             findAdminMenuByIdProfiles:
@@ -74,7 +86,7 @@ namespace hefesto.base_hefesto.Services
             return lista;
         }
 
-        public List<AdmMenu> findMenuParentByIdProfiles(List<long> listaIdProfile)
+        public List<AdmMenu> FindMenuParentByIdProfiles(List<long> listaIdProfile)
         {
             /*
             findMenuParentByIdProfiles:
@@ -108,14 +120,14 @@ namespace hefesto.base_hefesto.Services
 
             foreach (AdmMenu admMenu in lista)
             {
-                List<AdmMenu> plist = this.findMenuByIdProfiles(listaIdProfile, admMenu);
-                _serviceMenu.SetTransientWithoutSubMenus(plist);
-                _serviceMenu.SetTransientSubMenus(admMenu, plist);
+                List<AdmMenu> plist = this.FindMenuByIdProfiles(listaIdProfile, admMenu);
+                this.serviceMenu.SetTransientWithoutSubMenus(plist);
+                this.serviceMenu.SetTransientSubMenus(admMenu, plist);
             }
             return lista;
         }
 
-        public List<AdmMenu> findAdminMenuParentByIdProfiles(List<long> listaIdProfile)
+        public List<AdmMenu> FindAdminMenuParentByIdProfiles(List<long> listaIdProfile)
         {
             /*
             findAdminMenuParentByIdProfiles: 
@@ -149,9 +161,9 @@ namespace hefesto.base_hefesto.Services
 
             foreach (AdmMenu admMenu in lista)
             {
-                List<AdmMenu> plist = this.findAdminMenuByIdProfiles(listaIdProfile, admMenu);
-                _serviceMenu.SetTransientWithoutSubMenus(plist);
-                _serviceMenu.SetTransientSubMenus(admMenu, plist);
+                List<AdmMenu> plist = this.FindAdminMenuByIdProfiles(listaIdProfile, admMenu);
+                this.serviceMenu.SetTransientWithoutSubMenus(plist);
+                this.serviceMenu.SetTransientSubMenus(admMenu, plist);
             }
             return lista;
         }
@@ -161,9 +173,9 @@ namespace hefesto.base_hefesto.Services
         {
             List<MenuItemDTO> lista = new List<MenuItemDTO>();
 
-            this.findMenuParentByIdProfiles(listaIdProfile).ForEach(menu => {
+            this.FindMenuParentByIdProfiles(listaIdProfile).ForEach(menu => {
                 List<MenuItemDTO> item = new List<MenuItemDTO>();
-                List<AdmMenu> admSubMenus = new List<AdmMenu>(menu.InverseAdmMenuParent);
+                List<AdmMenu> admSubMenus = new List<AdmMenu>(menu.AdmSubMenus);
 
                 admSubMenus.ForEach(submenu => {
                     MenuItemDTO submenuVO = new MenuItemDTO(submenu.Description, submenu.Url);
@@ -174,9 +186,9 @@ namespace hefesto.base_hefesto.Services
                 lista.Add(vo);
             });
 
-            this.findAdminMenuParentByIdProfiles(listaIdProfile).ForEach(menu => {
+            this.FindAdminMenuParentByIdProfiles(listaIdProfile).ForEach(menu => {
                 List<MenuItemDTO> item = new List<MenuItemDTO>();
-                List<AdmMenu> admSubMenus = new List<AdmMenu>(menu.InverseAdmMenuParent);
+                List<AdmMenu> admSubMenus = new List<AdmMenu>(menu.AdmSubMenus);
 
                 admSubMenus.ForEach(submenu => {
                     MenuItemDTO submenuVO = new MenuItemDTO(submenu.Description, submenu.Url);
@@ -189,5 +201,96 @@ namespace hefesto.base_hefesto.Services
 
             return await Task.FromResult(lista);
         }
+
+        public List<MenuVO> FindMenuParentByProfile(List<long> listaIdProfile)
+        {
+            List<AdmMenu> listaMenuParent = this.FindMenuParentByIdProfiles(listaIdProfile);
+            return serviceMenu.ToListMenuVO(listaMenuParent);
+        }
+
+        public List<MenuVO> FindAdminMenuParentByProfile(List<long> listaIdProfile)
+        {
+            List<AdmMenu> listaAdminMenuParent = this.FindAdminMenuParentByIdProfiles(listaIdProfile);
+            return serviceMenu.ToListMenuVO(listaAdminMenuParent);
+        }
+
+        public bool Authenticate(AdmUser admUser)
+        {
+            UserVO userVO = new UserVO(admUser.Id, admUser.Email, admUser.Login, admUser.Name, admUser.Active);
+            SetProperties(admUser.Login, userVO);
+		    return true;
+        }
+
+        private async void SetProperties(string login, UserVO userVO)
+        {
+            this.authenticatedUser.UserName = login;
+            this.authenticatedUser.User = userVO;
+            this.authenticatedUser = await this.modeTestService.MountAuthenticatedUser(this, userVO,
+                    this.authenticatedUser, true);
+
+            this.authenticatedUser = await this.modeTestService.Start(this, userVO, this.authenticatedUser, true);
+
+            if (this.authenticatedUser.ModeTest && this.authenticatedUser.ModeTestLoginVirtual.Length > 0)
+            {
+
+                var vUser = await userService.GetUser(this.authenticatedUser.UserName, this.authenticatedUser.DisplayName,
+                        this.authenticatedUser.Email, false);
+                this.authenticatedUser.User = vUser.ToUserVO();
+            }
+            else
+            {
+                this.authenticatedUser.User = userVO;
+            }
+
+            logger.LogInformation(this.authenticatedUser.UserName + ", Profiles: "
+                    + this.authenticatedUser.ListPermission.ToString());
+            ShowProfileURL();
+            ShowMenus();
+        }
+
+        public void ShowProfileURL()
+        {
+            foreach (PermissionVO permissao in this.authenticatedUser.ListPermission)
+            {
+                foreach (PageVO admPagina in permissao.Pages)
+                {
+                    logger.LogInformation("Profile: " + permissao.Profile.Description + " -> Page URL: " + admPagina.Url);
+                }
+            }
+        }
+
+        public void ShowMenus()
+        {
+            foreach (MenuVO menu in this.authenticatedUser.ListMenus)
+            {
+                logger.LogInformation("Menu: " + menu.ToString());
+            }
+            foreach (MenuVO menu in this.authenticatedUser.ListAdminMenus)
+            {
+                logger.LogInformation("Menu Admin: " + menu.ToString());
+            }
+        }
+
+        public List<MenuVO> GetListaMenus()
+        {
+            return this.authenticatedUser.ListMenus;
+        }
+
+        public List<MenuVO> GetListaAdminMenus()
+        {
+            return this.authenticatedUser.ListAdminMenus;
+        }
+
+        public PageVO GetPagina(long idMenu)
+        {
+            return this.authenticatedUser.GetPageByMenu(idMenu);
+        }
+
+        public AuthenticatedUserVO GetAuthenticatedUser()
+        {
+            return authenticatedUser;
+        }
+
     }
+
 }

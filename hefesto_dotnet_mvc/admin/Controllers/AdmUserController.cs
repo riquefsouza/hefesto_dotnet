@@ -5,41 +5,30 @@ using hefesto.admin.Services;
 using hefesto.base_hefesto.Services;
 using hefesto.base_hefesto.Report;
 
-namespace hefesto_dotnet_mvc.Controllers
+namespace hefesto_dotnet_mvc.admin.Controllers
 {
-    public class AdmParameterController : BaseViewReportController
+    public class AdmUserController : BaseViewReportController
     {
-        private readonly IAdmParameterService _service;
-
-        private readonly IAdmParameterCategoryService _serviceParameterCategory;
+        private readonly IAdmUserService _service;
 
         private readonly IMessageService _messageService;
 
-        public AdmParameterController(IAdmParameterService service,
-            IAdmParameterCategoryService serviceParameterCategory,
+        public AdmUserController(IAdmUserService service,
             IMessageService messageService, ISystemService systemService) : base(messageService, systemService)
         {
             _service = service;
-            _serviceParameterCategory = serviceParameterCategory;
             _messageService = messageService;
-        }
-
-        private async void LoadAdmParameterCategory()
-        {
-            var listAdmCategories = await _serviceParameterCategory.FindAll();
-            ViewData["listAdmCategories"] = listAdmCategories;
-            //ViewBag.listAdmCategories = listAdmCategories;
         }
 
         public async Task<IActionResult> Index()
         {
             LoadMessages();
 
-            var listAdmParameter = await _service.FindAll();
-            return View(listAdmParameter);
+            var listAdmUser = await _service.FindAll();
+            return View(listAdmUser);
         }
 
-        // GET: AdmParameter/Edit/{id}
+        // GET: AdmUser/Edit/{id}
         public async Task<IActionResult> Edit(long? id)
         {
             if (id == null)
@@ -47,17 +36,16 @@ namespace hefesto_dotnet_mvc.Controllers
                 return NotFound();
             }
 
-            LoadAdmParameterCategory();
             LoadMessages();
 
             if (id > 0)
             {
-                var admParameter = await _service.FindById(id);
-                if (admParameter == null)
+                var admUser = await _service.FindById(id);
+                if (admUser == null)
                 {
                     return NotFound();
                 }
-                return View(admParameter);
+                return View(admUser);
             } else
             {
                 return View();
@@ -67,18 +55,18 @@ namespace hefesto_dotnet_mvc.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Save(long id, 
-            [Bind("Id,Code,Description,IdParameterCategory,Value")] AdmParameter admParameter)
+            [Bind("Id,Active,Email,Login,Name,Password")] AdmUser admUser)
         {
             if (id > 0)
             {
-                if (id != admParameter.Id)
+                if (id != admUser.Id)
                 {
                     return NotFound();
                 }
 
                 if (ModelState.IsValid)
                 {
-                    var updated = await _service.Update(id, admParameter);
+                    var updated = await _service.Update(id, admUser);
                     if (!updated)
                     {
                         return NotFound();
@@ -91,15 +79,15 @@ namespace hefesto_dotnet_mvc.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    await _service.Insert(admParameter);
+                    await _service.Insert(admUser);
                     return RedirectToAction(nameof(Index));
                 }
             }
 
-            return View(admParameter);
+            return View(admUser);
         }
 
-        // DELETE: AdmParameter/Delete/5
+        // DELETE: AdmUser/Delete/5
         //[HttpDelete, ActionName("Delete")]
         //[ValidateAntiForgeryToken]
         [HttpDelete]

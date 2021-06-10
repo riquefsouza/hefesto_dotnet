@@ -16,17 +16,14 @@ namespace hefesto_dotnet_webapi.base_hefesto.Controllers
 {
     [Route("/auth")]
     [ApiController]
-    public class TokenController : ControllerBase
+    public class LoginController : ControllerBase
     {
         public IConfiguration _configuration;
-        private readonly dbhefestoContext _context;
         private readonly IAdmUserService _userService;
 
-        public TokenController(IConfiguration config, dbhefestoContext context, 
-            IAdmUserService userService)
+        public LoginController(IConfiguration config, IAdmUserService userService)
         {
             _configuration = config;
-            _context = context;
             _userService = userService;
         }
 

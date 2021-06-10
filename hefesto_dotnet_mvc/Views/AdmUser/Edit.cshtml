@@ -1,0 +1,87 @@
+@using hefesto.admin.Models
+
+@model AdmUser
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<!-- =================================================================================== -->
+
+<form id="formEditAdmUser" style="padding: 5px;" asp-action="Save" method="post">
+
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <input type="hidden" asp-for="Id" />
+
+    <div class="card">
+        <div class="card-header"
+             style="font-weight: bold;font-size: large;">
+            @ViewData["editAdmUser.title"]
+        </div>
+        <div class="card-body">
+            <div class="form-actions">
+                <button type="submit" class="btn btn-success" id="btnSave">
+                    <span class="icon text-white-50">
+                        <i class="fa fa-check-circle"></i>
+                    </span>
+                    <span class="text">@ViewData["button.save"]</span>
+                </button>
+
+                <button type="reset" class="btn btn-light" id="btnReset">
+                    <span class="icon text-gray-600">
+                        <i class="fa fa-eraser"></i>
+                    </span>
+                    <span class="text">@ViewData["button.reset"]</span>
+                </button>
+
+                <button type="button" class="btn btn-primary" id="btnCancel">
+                    <span class="icon text-white-50">
+                        <i class="fa fa-times-circle"></i>
+                    </span>
+                    <span class="text">@ViewData["button.cancel"]</span>
+                </button>
+            </div>
+            <div class="row">
+                <div class="col-md-4 form-group mb-2">
+                    <input type="hidden" id="admUser_id" th:field="*{id}" />
+
+                    <label asp-for="Login">@ViewData["editAdmUser.login"]</label>
+                    <input type="text" class="form-control" asp-for="Login" maxlength="64" required="required" />
+                    <span asp-validation-for="Login" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-8 form-group mb-2">
+                    <label asp-for="Name">@ViewData["editAdmUser.name"]</label>
+                    <input type="text" class="form-control" asp-for="Name" maxlength="64" required="required" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-8 form-group mb-2">
+                    <label asp-for="Email">@ViewData["editAdmUser.email"]</label>
+                    <input type="text" class="form-control" asp-for="Email" maxlength="64" required="required" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3 form-group mb-2">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" asp-for="Active">
+                        <label class="form-check-label" asp-for="Active">
+                            &nbsp;@ViewData["editAdmUser.active"]
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<script src="~/static/js/admin/admUser/editAdmUser.js"></script>
+
+<!-- =================================================================================== -->
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

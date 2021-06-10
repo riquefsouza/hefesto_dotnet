@@ -38,7 +38,7 @@ class ListAdmMenu extends HFSSystemUtil {
 	btnAddClick(event) {
 		event.preventDefault();
 		this._form[0].action += '/0';
-		this._formListAdmPage.submit();
+		this._formListAdmMenu.submit();
 	}
 	
 	btnEditClick(event) {

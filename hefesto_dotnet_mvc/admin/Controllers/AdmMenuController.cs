@@ -7,7 +7,7 @@ using hefesto.admin.Services;
 using hefesto.base_hefesto.Services;
 using hefesto.base_hefesto.Report;
 
-namespace hefesto_dotnet_mvc.Controllers
+namespace hefesto_dotnet_mvc.admin.Controllers
 {
     public class AdmMenuController : BaseViewReportController
     {
@@ -42,7 +42,7 @@ namespace hefesto_dotnet_mvc.Controllers
             List<AdmMenu> listAdmMenus = await _service.FindAll();
             foreach (AdmMenu menu in listAdmMenus)
             {
-                if ((menu.InverseAdmMenuParent != null) && (menu.AdmPage == null))
+                if ((menu.AdmSubMenus != null) && (menu.AdmPage == null))
                 {
                     listAdmMenuParent.Add(menu);
                 }

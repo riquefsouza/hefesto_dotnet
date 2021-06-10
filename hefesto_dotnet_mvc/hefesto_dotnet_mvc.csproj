@@ -37,6 +37,7 @@
     <Folder Include="Views\AdmProfile\" />
     <Folder Include="Views\AdmPage\" />
     <Folder Include="Views\AdmMenu\" />
+    <Folder Include="Views\AdmUser\" />
   </ItemGroup>
 
 </Project>

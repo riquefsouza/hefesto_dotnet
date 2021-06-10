@@ -6,7 +6,7 @@ using hefesto.base_hefesto.Services;
 using hefesto.base_hefesto.Report;
 using hefesto.base_hefesto.Pagination;
 
-namespace hefesto_dotnet_mvc.Controllers
+namespace hefesto_dotnet_mvc.admin.Controllers
 {
     public class AdmParameterCategoryController : BaseViewReportController
     {

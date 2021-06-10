@@ -7,7 +7,7 @@ using hefesto.base_hefesto.Services;
 using hefesto.base_hefesto.Report;
 using hefesto.base_hefesto;
 
-namespace hefesto_dotnet_mvc.Controllers
+namespace hefesto_dotnet_mvc.admin.Controllers
 {
     public class AdmProfileController : BaseViewReportController
     {

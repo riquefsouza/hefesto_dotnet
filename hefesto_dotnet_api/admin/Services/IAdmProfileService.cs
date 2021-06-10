@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using hefesto.admin.Models;
 
-using hefesto.base_hefesto.Pagination;
+using hefesto.admin.VO;
 using hefesto.base_hefesto.Services;
 
 namespace hefesto.admin.Services
@@ -14,5 +14,6 @@ namespace hefesto.admin.Services
         
         Task<List<AdmProfile>> FindProfilesByPage(long pageId);
         Task<List<AdmProfile>> FindProfilesByUser(long userId);
+        Task<List<PermissionVO>> GetPermission(AuthenticatedUserVO authenticatedUser);
     }
 }
