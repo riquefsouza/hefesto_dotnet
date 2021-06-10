@@ -30,6 +30,8 @@ namespace hefesto.base_hefesto.Services
             this.serviceMenu = serviceMenu;
             this.modeTestService = modeTestService;
             this.userService = userService;
+
+            this.authenticatedUser = new AuthenticatedUserVO();
         }
 
         public List<AdmMenu> FindMenuByIdProfiles(List<long> listaIdProfile, AdmMenu admMenu)
@@ -216,7 +218,11 @@ namespace hefesto.base_hefesto.Services
 
         public bool Authenticate(AdmUser admUser)
         {
-            UserVO userVO = new UserVO(admUser.Id, admUser.Email, admUser.Login, admUser.Name, admUser.Active);
+            AdmUser user = userService.FindByLogin(admUser.Login);
+
+            //Set<AdmProfile> roles = new HashSet<AdmProfile>(profileRepository.findProfilesByUser(user.get().getId()));
+
+            UserVO userVO = new UserVO(user.Id, user.Email, user.Login, user.Name, user.Active);
             SetProperties(admUser.Login, userVO);
 		    return true;
         }

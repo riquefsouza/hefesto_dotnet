@@ -53,12 +53,16 @@ namespace hefesto.admin.Models
 			m.IdPage = this.IdPage;
 			if (AdmPage != null)
 			{
-				m.Page = AdmPage.ToPageVO();
+				m.Page = this.AdmPage.ToPageVO();
 			}
-			foreach (AdmMenu admSubMenu in AdmSubMenus)
-			{
-				m.SubMenus.Add(admSubMenu.ToMenuVO());
+			if (this.AdmSubMenus != null)
+            {
+				foreach (AdmMenu admSubMenu in this.AdmSubMenus)
+				{
+					m.SubMenus.Add(admSubMenu.ToMenuVO());
+				}
 			}
+			m.SetNameAndView();
 
 			return m;
 		}

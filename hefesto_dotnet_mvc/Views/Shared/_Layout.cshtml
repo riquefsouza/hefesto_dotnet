@@ -1,4 +1,4 @@
-﻿@using hefesto.base_hefesto.Models
+﻿@using hefesto.admin.VO
 
 <!DOCTYPE html>
 <html lang="en">
@@ -40,18 +40,18 @@
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item dropdown">
 
-                        @foreach (var menu in (IEnumerable<MenuItemDTO>)@ViewData["MenuItem"])
+                        @foreach (var menu in (IEnumerable<MenuVO>)@ViewData["MenuItem"])
                         {
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                @menu.Label
+                                @menu.Description
 
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <li>
-                                    @foreach (var submenu in menu.Item)
+                                    @foreach (var submenu in menu.SubMenus)
                                     {
                                         <a class="dropdown-item" id="@submenu.View" asp-area="" asp-controller="@submenu.Name" asp-action="Index">
-                                            @submenu.Label
+                                            @submenu.Description
                                         </a>
                                     }
                                 </li>

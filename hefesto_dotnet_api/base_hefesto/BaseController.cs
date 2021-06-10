@@ -24,7 +24,7 @@ namespace hefesto.base_hefesto
             _systemService = systemService;
         }
 
-        virtual async protected void LoadMessages()
+        virtual protected void LoadMessages()
         {
             ViewData["AlertMessage"] = new AlertMessageVO();
 
@@ -33,12 +33,16 @@ namespace hefesto.base_hefesto
                 ViewData[msg.Key] = msg.Value;
             }
 
-            List<long> listaIdProfile = new List<long>();
-            listaIdProfile.Add(1);
-            listaIdProfile.Add(2);
+            //List<long> listaIdProfile = new List<long>();
+            //listaIdProfile.Add(1);
+            //listaIdProfile.Add(2);
+            //ViewData["MenuItem"] = await _systemService.MountMenuItem(listaIdProfile);
 
-            ViewData["MenuItem"] = await _systemService.MountMenuItem(listaIdProfile);
+            var authenticatedUser = this.GetAuthenticatedUser();
 
+            var listMenus = authenticatedUser.ListAdminMenus;
+            
+            ViewData["MenuItem"] = listMenus;
         }
 
         public AuthenticatedUserVO GetAuthenticatedUser()

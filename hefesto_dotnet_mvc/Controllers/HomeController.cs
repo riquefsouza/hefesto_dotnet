@@ -35,16 +35,17 @@ namespace hefesto_dotnet_mvc.Controllers
         }
 
         public IActionResult Index()
-        {
-            LoadMessages();
-
+        {            
             AdmUser user = new AdmUser("admin", "123456");
 
             if (systemService.Authenticate(user))
             {
                 //HttpContext.Session.SetString("authenticatedUser", systemService.GetAuthenticatedUser());
-                HttpContext.Session.Set<AuthenticatedUserVO>("authenticatedUser", systemService.GetAuthenticatedUser());
+                var authenticatedUser = systemService.GetAuthenticatedUser();
+                HttpContext.Session.Set<AuthenticatedUserVO>("authenticatedUser", authenticatedUser);
             }
+
+            LoadMessages();
 
             return View();
         }

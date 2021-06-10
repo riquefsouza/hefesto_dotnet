@@ -18,7 +18,7 @@ namespace hefesto.base_hefesto.Models
         public string To { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public List<MenuItemDTO> Item { get; set; }
+        public List<MenuItemDTO> Items { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public string Name { get; set; }
@@ -27,7 +27,7 @@ namespace hefesto.base_hefesto.Models
         public string View { get; set; }
 
         public MenuItemDTO(){
-    		this.Item = new List<MenuItemDTO>();
+    		this.Items = new List<MenuItemDTO>();
 	    	Clean();
         }
 
@@ -39,12 +39,12 @@ namespace hefesto.base_hefesto.Models
             SetName(url);
         }        
 
-        public MenuItemDTO(string label, string url, List<MenuItemDTO> item) : base() {
+        public MenuItemDTO(string label, string url, List<MenuItemDTO> items) : base() {
             this.Label = label;
             this.Url = url;
             this.RouterLink = url;
             this.To = url;
-            this.Item = item;
+            this.Items = items;
             SetName(url);
         }
 
@@ -65,7 +65,7 @@ namespace hefesto.base_hefesto.Models
             this.RouterLink = "";
             this.Url = "";
             this.To = "";
-            this.Item.Clear();
+            this.Items.Clear();
             this.Name = "";
             this.View = "";
         }

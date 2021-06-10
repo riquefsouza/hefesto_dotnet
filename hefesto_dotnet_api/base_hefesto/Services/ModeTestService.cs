@@ -67,7 +67,7 @@ namespace hefesto.base_hefesto.Services
             ModeTestVO mtvo = lista
                     .Where(vo => vo.Active.Equals(true))
                     .Where(vo => vo.Login.Equals(authenticatedUser.UserName))
-                    .First();
+                    .FirstOrDefault();
 		
 		    if (mtvo != null){
 			    authenticatedUser.ModeTest = true;

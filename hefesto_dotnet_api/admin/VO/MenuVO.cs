@@ -45,10 +45,26 @@ namespace hefesto.admin.VO
 		
 		}
 
+		public string Name { get; set; }
+
+		public string View { get; set; }
+
 		public MenuVO()
 		{
 			this._subMenus = new List<MenuVO>();
 			Clean();
+		}
+
+		public void SetNameAndView()
+		{
+			if (this.Page != null && this.Page.Url != null)
+			{
+				if (this.Page.Url.Contains('/'))
+				{
+					this.Name = this.Page.Url.Substring(this.Page.Url.LastIndexOf('/') + 1);
+					this.View = this.Name + "View";
+				}
+			}
 		}
 
 		public void Clean()
@@ -60,7 +76,8 @@ namespace hefesto.admin.VO
 			this.Page = new PageVO();
 			this.MenuParent = null;
 			this._subMenus.Clear();
-
+			this.Name = "";
+			this.View = "";
 		}
 
 		public MenuVO AddSubMenus(MenuVO subMenus)

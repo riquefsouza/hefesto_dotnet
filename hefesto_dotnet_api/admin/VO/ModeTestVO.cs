@@ -8,7 +8,7 @@ namespace hefesto.admin.VO
 {
     public class ModeTestVO : IEquatable<ModeTestVO>
 	{
-		public bool? Active { get; set; }
+		public bool Active { get; set; }
 
 		public string Login { get; set; }
 
@@ -41,12 +41,7 @@ namespace hefesto.admin.VO
 			if (this.GetType() != other.GetType())
 				return false;
 
-			if (Active == null)
-			{
-				if (other.Active != null)
-					return false;
-			}
-			else if (!Active.Equals(other.Active))
+			if (!Active.Equals(other.Active))
 				return false;
 
 			if (Login == null)

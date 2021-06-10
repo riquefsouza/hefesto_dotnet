@@ -13,6 +13,7 @@ namespace hefesto.admin.Services
         Task<AdmUser> Authenticate(string login, string password);
         bool VerifyPassword(string password, string hashPassword);
 
+        AdmUser FindByLogin(string login);
         List<UserVO> FindByLikeEmail(string email);
         Task<AdmUser> GetUser(string login, string name, string email, bool auditar);
     }

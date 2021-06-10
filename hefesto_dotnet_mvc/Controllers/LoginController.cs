@@ -24,17 +24,8 @@ namespace hefesto_dotnet_mvc.Controllers
         {
             LoadMessages();
 
-            /*
-            get
-            {
-                object value = HttpContext.Current.Session["TestSessionValue"];
-                return value == null ? "" : (string)value;
-            }
-            set
-            {
-                HttpContext.Current.Session["TestSessionValue"] = value;
-            }
-            */
+            var authenticatedUser = this.GetAuthenticatedUser();
+            //_logger.LogInformation();
 
             return View();
         }

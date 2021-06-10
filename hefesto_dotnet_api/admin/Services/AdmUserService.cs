@@ -36,12 +36,15 @@ namespace hefesto.admin.Services
 
         public void SetTransient(AdmUser item)
         {
-            var obj = _service.GetProfilesByUser(item.Id);                
-            obj.ForEach(profile => item.AdmIdProfiles.Add(profile.Id));
+            if (item != null)
+            {
+                var obj = _service.GetProfilesByUser(item.Id);
+                obj.ForEach(profile => item.AdmIdProfiles.Add(profile.Id));
 
-            List<string> listUserProfiles = new List<string>();
-            obj.ForEach(profile => listUserProfiles.Add(profile.Description));
-            item.UserProfiles = String.Join(",", listUserProfiles);
+                List<string> listUserProfiles = new List<string>();
+                obj.ForEach(profile => listUserProfiles.Add(profile.Description));
+                item.UserProfiles = String.Join(",", listUserProfiles);
+            }
         }
 
         public async Task<BasePaged<AdmUser>> GetPage(string route, PaginationFilter filter)
@@ -185,11 +188,26 @@ namespace hefesto.admin.Services
             return lista;
         }
 
+        public AdmUser FindByLogin(string login)
+        {
+            var query = _context.AdmUsers.AsQueryable();
+            query = _context.AdmUsers.Where(adm => adm.Login.Equals(login)).Distinct();
+
+            var obj = query.FirstOrDefault();
+            this.SetTransient(obj);
+
+            return obj;
+        }
+
         public List<AdmUser> FindAdmUserByLikeEmail(string email)
         {
             var query = _context.AdmUsers.AsQueryable();
             query = _context.AdmUsers.Where(adm => adm.Email.Contains(email)).Distinct();
-            return query.ToList();
+            
+            var listObj =  query.ToList();
+            this.SetTransient(listObj);
+
+            return listObj;
         }
 
         public List<UserVO> FindByLikeEmail(string email)

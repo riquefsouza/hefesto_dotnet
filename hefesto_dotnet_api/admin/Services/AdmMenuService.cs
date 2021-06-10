@@ -40,7 +40,11 @@ namespace hefesto.admin.Services
             item.AdmPage = _context.AdmPages.Find(item.IdPage);
             item.AdmMenuParent = _context.AdmMenus.Find(item.IdMenuParent); 
             item.Url = item.AdmPage != null ? item.AdmPage.Url : null;
-            item.AdmSubMenus = subMenus;
+            if (subMenus != null)
+            {
+                item.AdmSubMenus = subMenus;
+            }
+            
         }
         public void SetTransient(AdmMenu item)
         {
