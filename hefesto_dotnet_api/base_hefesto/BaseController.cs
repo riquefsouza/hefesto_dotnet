@@ -14,7 +14,7 @@ namespace hefesto.base_hefesto
 {
     public class BaseController : Controller
     {
-        protected IMessageService MessageService { get; set; }
+        protected readonly IMessageService MessageService;
 
         private readonly ISystemService _systemService;
 
@@ -26,7 +26,15 @@ namespace hefesto.base_hefesto
 
         virtual protected void LoadMessages()
         {
-            ViewData["AlertMessage"] = new AlertMessageVO();
+            this.LoadMessages(null);
+        }
+
+        virtual protected void LoadMessages(AlertMessageVO alertMessage)
+        {
+            if (alertMessage == null)
+                ViewData["AlertMessage"] = new AlertMessageVO();
+            else
+                ViewData["AlertMessage"] = alertMessage;
 
             foreach (var msg in MessageService.GetMessages())
             {

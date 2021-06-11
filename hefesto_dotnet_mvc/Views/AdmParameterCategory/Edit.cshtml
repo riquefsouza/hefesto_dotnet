@@ -42,7 +42,7 @@
             </div>
             <div class="row">
                 <div class="col-md-4 form-group mb-3">
-                    <input type="hidden" id="admParameterCategory_id" />
+                    <input type="hidden" id="admParameterCategory_id" value="@Model.Id" />
 
                     <label asp-for="Description">@ViewData["editAdmParameterCategory.description"]</label>
                     <input type="text" class="form-control" asp-for="Description" maxlength="64" required="required" />

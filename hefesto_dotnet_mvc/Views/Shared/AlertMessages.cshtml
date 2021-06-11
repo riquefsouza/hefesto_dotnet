@@ -48,51 +48,66 @@
 @if (((AlertMessageVO)ViewData["AlertMessage"]).PrimaryMessage.Trim().Length > 0)
 {
 <div class="alert alert-primary alert-dismissible" role="alert">
-    <strong><span>@ViewData["primaryMessage"]</span></strong>
+    <strong><span>@Html.Raw(((AlertMessageVO)ViewData["AlertMessage"]).PrimaryMessage)</span></strong>
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-</div>}
+</div>
+}
+
 @if (((AlertMessageVO)ViewData["AlertMessage"]).SecondaryMessage.Trim().Length > 0)
 {
 <div class="alert alert-secondary alert-dismissible" role="alert">
-    <strong><span>@ViewData["secondaryMessage"]</span></strong>
+    <strong><span>@Html.Raw(((AlertMessageVO)ViewData["AlertMessage"]).SecondaryMessage)</span></strong>
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-</div>}
+</div>
+}
+
 @if (((AlertMessageVO)ViewData["AlertMessage"]).SuccessMessage.Trim().Length > 0)
 {
 <div class="alert alert-success alert-dismissible" role="alert">
-    <strong><span>@ViewData["successMessage"]</span></strong>
+    <strong><span>@Html.Raw(((AlertMessageVO)ViewData["AlertMessage"]).SuccessMessage)</span></strong>
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-</div>}
+</div>
+}
+
 @if (((AlertMessageVO)ViewData["AlertMessage"]).DangerMessage.Trim().Length > 0)
 {
 <div class="alert alert-danger alert-dismissible" role="alert">
-    <strong><span>@ViewData["dangerMessage"]</span></strong>
+    <strong><span>@Html.Raw(((AlertMessageVO)ViewData["AlertMessage"]).DangerMessage)</span></strong>
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-</div>}
+</div>
+}
+
 @if (((AlertMessageVO)ViewData["AlertMessage"]).WarningMessage.Trim().Length > 0)
 {
 <div class="alert alert-warning alert-dismissible" role="alert">
-    <strong><span>@ViewData["warningMessage"]</span></strong>
+    <strong><span>@Html.Raw(((AlertMessageVO)@ViewData["AlertMessage"]).WarningMessage)</span></strong>
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-</div>}
+</div>
+}
+
 @if (((AlertMessageVO)ViewData["AlertMessage"]).InfoMessage.Trim().Length > 0)
 {
 <div class="alert alert-info alert-dismissible" role="alert">
-    <strong><span>@ViewData["infoMessage"]</span></strong>
+    <strong><span>@Html.Raw(((AlertMessageVO)ViewData["AlertMessage"]).InfoMessage)</span></strong>
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-</div>}
+</div>
+}
+
 @if (((AlertMessageVO)ViewData["AlertMessage"]).LightMessage.Trim().Length > 0)
 {
 <div class="alert alert-light alert-dismissible" role="alert">
-    <strong><span>@ViewData["lightMessage"]</span></strong>
+    <strong><span>@Html.Raw(((AlertMessageVO)ViewData["AlertMessage"]).LightMessage)</span></strong>
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-</div>}
+</div>
+}
+
 @if (((AlertMessageVO)ViewData["AlertMessage"]).DarkMessage.Trim().Length > 0)
 {
 <div class="alert alert-dark alert-dismissible" role="alert">
-    <strong><span>@ViewData["darkMessage"]</span></strong>
+    <strong><span>@Html.Raw(((AlertMessageVO)ViewData["AlertMessage"]).DarkMessage)</span></strong>
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-</div>}
+</div>
+}
 
 
 <div class="modal fade" id="dlgAlertMessage" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">

@@ -1,0 +1,105 @@
+@using hefesto.admin.VO;
+
+@model UserVO
+
+@{
+    ViewData["Title"] = "Change Password";
+}
+
+<!-- =================================================================================== -->
+
+<form id="formChangePassword" style="padding: 5px;" asp-action="Save" method="post">
+
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <input type="hidden" asp-for="Id" />
+
+    <div class="card">
+        <div class="card-header" style="font-weight: bold;font-size: large;">
+            @ViewData["changePassword.title"]
+        </div>
+        <div class="card-body">
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-success" id="btnSave">
+                    <span class="icon text-white-50">
+                        <i class="fa fa-check-circle"></i>
+                    </span>
+                    <span class="text">@ViewData["button.save"]</span>
+                </button>
+
+                <button type="reset" class="btn btn-light" id="btnReset">
+                    <span class="icon text-gray-600">
+                        <i class="fa fa-eraser"></i>
+                    </span>
+                    <span class="text">@ViewData["button.reset"]</span>
+                </button>
+
+                <button type="button" class="btn btn-primary" id="btnCancel">
+                    <span class="icon text-white-50">
+                        <i class="fa fa-times-circle"></i>
+                    </span>
+                    <span class="text">@ViewData["button.cancel"]</span>
+                </button>
+            </div>
+
+            <div class="row">
+                <p>As minimum requirements for user passwords, the following should be considered:</p>
+                <ul>
+                    <li>Minimum length of 8 characters;</li>
+                    <li>
+                        Presence of at least 3 of the 4 character classes below:
+                        <ul>
+                            <li>uppercase characters;</li>
+                            <li>lowercase characters;</li>
+                            <li>numbers;</li>
+                            <li>special characters;</li>
+                            <li>Absence of strings (eg: 1234) or consecutive identical characters (yyyy);</li>
+                            <li>Absence of any username identifier, such as: John Silva - user: john.silva - password cannot contain "john" or "silva".</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 form-group mb-2">
+
+                    <input type="hidden" value="@Model.Id" />
+                    <input type="hidden" value="@Model.Name" />
+                    <input type="hidden" value="@Model.Login" />
+                    <input type="hidden" value="@Model.Password" />
+                    <input type="hidden" value="@Model.Email" />
+
+                    <label asp-for="CurrentPassword">@ViewData["changePassword.currentPassword"]</label>
+                    <input type="password" class="form-control" asp-for="CurrentPassword" required="required" maxlength="64" autocomplete="off" />
+                    <span asp-validation-for="CurrentPassword" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 form-group mb-2">
+                    <label asp-for="NewPassword">@ViewData["changePassword.newPassword"]</label>
+                    <input type="password" class="form-control" asp-for="NewPassword" required="required" maxlength="64" autocomplete="off" />
+                    <span asp-validation-for="NewPassword" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 form-group mb-2">
+                    <label asp-for="ConfirmNewPassword">@ViewData["changePassword.confirmNewPassword"]</label>
+                    <input type="password" class="form-control" asp-for="ConfirmNewPassword" required="required" maxlength="64" autocomplete="off" />
+                    <span asp-validation-for="ConfirmNewPassword" class="text-danger"></span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <br>
+    <br>
+</form>
+
+<script src="~/static/js/hfsframework/hfsframework-changePassword.js"></script>
+
+<!-- =================================================================================== -->
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using hefesto.base_hefesto;
 using hefesto.base_hefesto.Services;
-using hefesto_dotnet_mvc.Models;
+using hefesto.admin.VO;
 using Microsoft.AspNetCore.Mvc;
 
 namespace hefesto_dotnet_mvc.Controllers
@@ -13,6 +13,8 @@ namespace hefesto_dotnet_mvc.Controllers
     public class LoginController : BaseController
     {
         private readonly ILogger<LoginController> _logger;
+
+        private UserVO userLogged;
 
         public LoginController(ILogger<LoginController> logger,
             IMessageService messageService, ISystemService systemService) : base(messageService, systemService)
@@ -24,16 +26,23 @@ namespace hefesto_dotnet_mvc.Controllers
         {
             LoadMessages();
 
-            var authenticatedUser = this.GetAuthenticatedUser();
-            //_logger.LogInformation();
+            userLogged = this.GetAuthenticatedUser().User;
 
-            return View();
+            return View(userLogged);
         }
 
-        public IActionResult Login()
-        {
-            LoadMessages();
-            return View();
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Login(long id, 
+            [Bind("Id,Active,Email,Login,Name,Password,CurrentPassword,NewPassword,ConfirmNewPassword")] UserVO user)
+        {            
+
+            if (user.Login.Trim().Length > 0 && user.Password.Trim().Length > 0)
+            {
+
+            }
+
+            return View("/home");
         }
 
     }

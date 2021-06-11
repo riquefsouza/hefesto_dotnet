@@ -42,7 +42,7 @@
             </div>
             <div class="row">
                 <div class="col-md-4 form-group mb-2">
-                    <input type="hidden" id="admParameter_id" />
+                    <input type="hidden" id="admParameter_id" value="@Model.Id" />
 
                     <label asp-for="IdParameterCategory">@ViewData["editAdmParameter.category"]</label>
                     <select asp-for="IdParameterCategory" class="form-select">

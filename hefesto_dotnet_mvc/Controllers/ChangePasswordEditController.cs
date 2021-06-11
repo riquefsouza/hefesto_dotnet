@@ -4,17 +4,19 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using hefesto.base_hefesto;
+using hefesto.base_hefesto.Models;
 using hefesto.base_hefesto.Services;
 using hefesto.admin.Models;
+using hefesto.admin.VO;
 using hefesto.admin.Services;
 using Microsoft.AspNetCore.Mvc;
 using BC = BCrypt.Net.BCrypt;
 
 namespace hefesto_dotnet_mvc.Controllers
 {
-    public class ChangePasswordController : BaseController
+    public class ChangePasswordEditController : BaseController
     {
-        private readonly ILogger<ChangePasswordController> _logger;
+        private readonly ILogger<ChangePasswordEditController> _logger;
 
         private readonly IAdmUserService _service;
 
@@ -22,7 +24,11 @@ namespace hefesto_dotnet_mvc.Controllers
 
         private readonly IChangePasswordService _changePasswordService;
 
-        public ChangePasswordController(ILogger<ChangePasswordController> logger, IAdmUserService service,
+        private UserVO userLogged;
+
+        private AlertMessageVO alertMessage;
+
+        public ChangePasswordEditController(ILogger<ChangePasswordEditController> logger, IAdmUserService service,
             IChangePasswordService changePasswordService,
             IMessageService messageService, ISystemService systemService) : base(messageService, systemService)
         {
@@ -36,23 +42,22 @@ namespace hefesto_dotnet_mvc.Controllers
         {
             LoadMessages();
 
-            //var userLogged = userDetails.getAuthenticatedUser().getUser();
+            userLogged = this.GetAuthenticatedUser().User;
 
-            //return View(userLogged);
-            return View();
+            return View(userLogged);
         }
 
-        public bool prepararParaSalvar(AdmUser user)
+        public bool PrepareToSave(UserVO user)
         {
             if ((user.NewPassword == null && user.ConfirmNewPassword == null && user.CurrentPassword == null)
                     || (user.NewPassword.Equals("") && user.ConfirmNewPassword.Equals("") && user.CurrentPassword.Equals("")))
             {
-                //this.showWarningMessage(mv, "changePasswordView.validation");
+                alertMessage = AlertMessageVO.Warning(_messageService, "changePasswordView.validation");
             }
             else if ((user.NewPassword == null && user.ConfirmNewPassword == null)
                   || (user.NewPassword.Equals("") && user.ConfirmNewPassword.Equals("")))
             {
-                //this.showWarningMessage(mv, "changePasswordView.validation");
+                alertMessage = AlertMessageVO.Warning(_messageService, "changePasswordView.validation");
             }
             else
             {
@@ -62,23 +67,23 @@ namespace hefesto_dotnet_mvc.Controllers
                 }
                 else
                 {
-                    //this.showWarningMessage(mv, "changePasswordView.notEqual");
+                    alertMessage = AlertMessageVO.Warning(_messageService, "changePasswordView.notEqual");
                 }
             }
             return false;
         }
 
-        public bool validatePassword(AdmUser user)
+        public bool ValidatePassword(UserVO user)
         {
             if (!this._changePasswordService.ValidatePassword(user.Login, user.CurrentPassword))
             {
-                //this.showWarningMessage(mv, "changePasswordView.validatePassword");
+                alertMessage = AlertMessageVO.Warning(_messageService, "changePasswordView.validatePassword");
                 return false;
             }
 
             if (!this._changePasswordService.ValidatePassword(user.Login, user.NewPassword))
             {
-                //this.showWarningMessage(mv, "changePasswordView.validatePassword");
+                alertMessage = AlertMessageVO.Warning(_messageService, "changePasswordView.validatePassword");
                 return false;
             }
             return true;
@@ -87,31 +92,33 @@ namespace hefesto_dotnet_mvc.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Save(long id, 
-            [Bind("Id,Active,Email,Login,Name,Password,CurrentPassword,NewPassword,ConfirmNewPassword")] AdmUser admUser)
+            [Bind("Id,Active,Email,Login,Name,Password,CurrentPassword,NewPassword,ConfirmNewPassword")] UserVO user)
         {
-            if (!prepararParaSalvar(admUser))
+            if (!PrepareToSave(user))
             {
-                return View(admUser);
+                LoadMessages(alertMessage);
+                return View(nameof(Index), user);
             }
 
-            if (!validatePassword(admUser))
+            if (!ValidatePassword(user))
             {
-                return View(admUser);
+                LoadMessages(alertMessage);
+                return View(nameof(Index), user);
             }
 
             if (id > 0)
             {
-                if (id != admUser.Id)
+                if (id != user.Id)
                 {
                     return NotFound();
                 }
 
                 if (ModelState.IsValid)
                 {
-                    string pwdCrypt = BC.HashPassword(admUser.ConfirmNewPassword, BC.GenerateSalt(10));
-                    admUser.Password = pwdCrypt;
-                    //userLogged.setPassword(pwdCrypt);
-                    //AdmUser admUser = new AdmUser(userLogged);                   
+                    string pwdCrypt = BC.HashPassword(user.ConfirmNewPassword, BC.GenerateSalt(10));
+                    
+                    userLogged.Password = pwdCrypt;
+                    AdmUser admUser = new AdmUser(userLogged);                   
 
                     var updated = await _service.Update(id, admUser);
                     if (!updated)
@@ -119,13 +126,12 @@ namespace hefesto_dotnet_mvc.Controllers
                         return NotFound();
                     }
 
-                    //this.showWarningMessage(mv.get(), "changePasswordView.passwordChanged");
-
-                    return RedirectToAction(nameof(Index));
+                    alertMessage = AlertMessageVO.Info(_messageService, "changePasswordView.passwordChanged");
+                    LoadMessages(alertMessage);
                 }
             }
 
-            return View(admUser);
+            return RedirectToAction(nameof(Index));
         }
     }
 }

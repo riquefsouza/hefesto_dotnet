@@ -43,7 +43,7 @@
             </div>
             <div class="row">
                 <div class="col-md-4 form-group mb-2">
-                    <input type="hidden" id="admUser_id" th:field="*{id}" />
+                    <input type="hidden" id="admUser_id" value="@Model.Id" />
 
                     <label asp-for="Login">@ViewData["editAdmUser.login"]</label>
                     <input type="text" class="form-control" asp-for="Login" maxlength="64" required="required" />

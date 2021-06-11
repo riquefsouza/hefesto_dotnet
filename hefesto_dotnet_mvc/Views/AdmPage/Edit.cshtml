@@ -43,7 +43,7 @@
             </div>
             <div class="row">
                 <div class="col-md-8 form-group mb-2">
-                    <input type="hidden" id="admPage_id" th:field="*{id}" />
+                    <input type="hidden" id="admPage_id" value="@Model.Id" />
 
                     <label asp-for="Url">@ViewData["editAdmPage.url"]</label>
                     <input type="text" class="form-control" asp-for="Url" maxlength="255" required="required" />

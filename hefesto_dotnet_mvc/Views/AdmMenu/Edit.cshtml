@@ -44,7 +44,7 @@
 
             <div class="row">
                 <div class="col-md-4 form-group mb-2">
-                    <input type="hidden" id="admMenu_id" th:field="*{id}" />
+                    <input type="hidden" id="admMenu_id" value="@Model.Id" />
 
                     <label asp-for="IdPage">@ViewData["editAdmMenu.page"]</label>
                     <select asp-for="IdPage" class="form-select">

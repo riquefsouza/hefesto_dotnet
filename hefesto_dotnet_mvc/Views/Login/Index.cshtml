@@ -1,6 +1,6 @@
-@using hefesto.admin.Models
+@using hefesto.admin.VO;
 
-@model IEnumerable<AdmUser>
+@model UserVO
 
 @{
     ViewData["Title"] = "Login";
@@ -8,10 +8,81 @@
 
 <!-- =================================================================================== -->
 
-<form id="formLogin" style="padding: 5px;" asp-action="Login" method="get">
+<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+    <a class="navbar-brand" id="anchorHomePage" href="~/login">
+        <span>@ViewData["main.framework"]</span>&nbsp;
+        <span>@ViewData["main.app.title"]</span>
+    </a>
+</nav>
 
+@if ((bool)ViewData["loginError"])
+{
+    <div class="alert alert-danger alert-dismissible" role="alert">
+        @ViewData["login.wrongUser"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
 
+<div th:replace="fragments/alertMessages :: alertMessages"></div>
 
-</form>
+<div class="container-fluid" style="margin: 0 auto; width:400px; position: float;">
+    <div id="tela-login" style="margin-top: 20px;">
+        <div class="card" id="tela-login">
+            <div class="card-header" style="font-weight: normal;">@ViewData["login.title"]</div>
+            <div class="card-body">
+
+                <form name="formLogin" asp-action="Login" method="POST">
+
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <input type="hidden" asp-for="Id" />
+
+                    <div class="form-group">
+                        <label asp-for="Login">@ViewData["login.username"]</label>
+                        <div class="input-group mb-3">
+                            <div class="input-group-append">
+                                <button class="btn btn-primary" type="button" disabled="disabled">
+                                    <i class="fas fa-user fa-sm"></i>
+                                </button>
+                            </div>
+                            <input type="text" class="form-control" asp-for="Login" autofocus required="required" maxlength="64"
+                                   placeholder="@ViewData["login.username.placeholder"]" />
+                            <span asp-validation-for="Login" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Password">@ViewData["login.password"]</label>
+                        <div class="input-group mb-3">
+                            <div class="input-group-append">
+                                <button class="btn btn-primary" type="button" disabled="disabled">
+                                    <i class="fas fa-lock fa-sm"></i>
+                                </button>
+                            </div>
+                            <input type="password" class="form-control" asp-for="Password" required="required" maxlength="64"
+                                   placeholder="@ViewData["login.password.placeholder"]" autocomplete="off" />
+                            <span asp-validation-for="Password" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div style="margin: 0 auto; width:25%">
+                            <button type="submit" class="btn btn-success btn-icon-split" id="btnLogin">
+                                <span class="icon text-white-50">
+                                    <i class="fa fa-sign-in" aria-hidden="true"></i>
+                                </span>
+                                @ViewData["login.button"]
+                            </button>
+                        </div>
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+    </div>
+</div>
 
 <!-- =================================================================================== -->
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
