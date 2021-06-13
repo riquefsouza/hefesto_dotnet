@@ -4,6 +4,7 @@ using hefesto.admin.Models;
 using hefesto.admin.Services;
 using hefesto.base_hefesto.Services;
 using hefesto.base_hefesto.Report;
+using Microsoft.AspNetCore.Authorization;
 
 namespace hefesto_dotnet_mvc.admin.Controllers
 {
@@ -31,6 +32,7 @@ namespace hefesto_dotnet_mvc.admin.Controllers
             //ViewBag.listAdmCategories = listAdmCategories;
         }
 
+        [Authorize]
         public async Task<IActionResult> Index()
         {
             LoadMessages();

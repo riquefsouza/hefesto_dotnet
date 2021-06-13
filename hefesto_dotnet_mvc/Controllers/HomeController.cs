@@ -12,6 +12,9 @@ using hefesto.admin.VO;
 using hefesto.base_hefesto;
 using hefesto.base_hefesto.Services;
 using hefesto.base_hefesto.Util;
+using Microsoft.AspNetCore.Authentication;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace hefesto_dotnet_mvc.Controllers
 {
@@ -35,21 +38,21 @@ namespace hefesto_dotnet_mvc.Controllers
         }
 
         public IActionResult Index()
-        {            
-            AdmUser user = new AdmUser("admin", "123456");
-
-            if (systemService.Authenticate(user))
-            {
-                //HttpContext.Session.SetString("authenticatedUser", systemService.GetAuthenticatedUser());
-                var authenticatedUser = systemService.GetAuthenticatedUser();
-                HttpContext.Session.Set<AuthenticatedUserVO>("authenticatedUser", authenticatedUser);
-            }
-
+        {
             LoadMessages();
 
-            return View();
+            var authenticatedUser = this.GetAuthenticatedUser();
+
+            if (authenticatedUser != null)
+            {
+                return View();
+            }
+            else
+            {
+                return RedirectToAction("Login", "Login");
+            }
+
         }
-
-
+        
     }
 }

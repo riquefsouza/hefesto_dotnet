@@ -39,6 +39,12 @@ namespace hefesto.admin.VO
 			Clean();
 		}
 
+		public UserVO(string login, string password)
+		{
+			this.Login = login;
+			this.Password = password;
+		}
+
 		public UserVO(long id, string email, string login, string name, bool active)
 		{
 			this.Id = id;

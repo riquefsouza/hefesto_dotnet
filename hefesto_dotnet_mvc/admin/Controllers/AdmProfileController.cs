@@ -6,6 +6,7 @@ using hefesto.admin.Services;
 using hefesto.base_hefesto.Services;
 using hefesto.base_hefesto.Report;
 using hefesto.base_hefesto;
+using Microsoft.AspNetCore.Authorization;
 
 namespace hefesto_dotnet_mvc.admin.Controllers
 {
@@ -112,6 +113,7 @@ namespace hefesto_dotnet_mvc.admin.Controllers
             return this.dualListAdmUser;
         }
 
+        [Authorize]
         public async Task<IActionResult> Index()
         {
             LoadMessages();

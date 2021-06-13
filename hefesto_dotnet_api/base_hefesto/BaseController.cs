@@ -41,16 +41,25 @@ namespace hefesto.base_hefesto
                 ViewData[msg.Key] = msg.Value;
             }
 
-            //List<long> listaIdProfile = new List<long>();
-            //listaIdProfile.Add(1);
-            //listaIdProfile.Add(2);
-            //ViewData["MenuItem"] = await _systemService.MountMenuItem(listaIdProfile);
-
             var authenticatedUser = this.GetAuthenticatedUser();
 
-            var listMenus = authenticatedUser.ListAdminMenus;
-            
-            ViewData["MenuItem"] = listMenus;
+            if (authenticatedUser!=null)
+            {
+                authenticatedUser.User.Active = true;
+                ViewData["UserLogged"] = authenticatedUser.User;
+
+                var listMenus = authenticatedUser.ListAdminMenus;
+
+                ViewData["MenuItem"] = listMenus;
+            } else
+            {
+                UserVO userLogged = new UserVO();
+                userLogged.Active = false;
+                ViewData["UserLogged"] = userLogged;
+
+                ViewData["MenuItem"] = new List<MenuVO>();                
+            }
+
         }
 
         public AuthenticatedUserVO GetAuthenticatedUser()
@@ -61,6 +70,11 @@ namespace hefesto.base_hefesto
         public void SetUserAuthenticated(AuthenticatedUserVO usu)
         {
             HttpContext.Session.Set<AuthenticatedUserVO>("authenticatedUser", usu);
+        }
+
+        public void RemoveUserAuthenticated()
+        {
+            HttpContext.Session.Remove("authenticatedUser");
         }
 
     }

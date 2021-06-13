@@ -1,0 +1,13 @@
+@{
+    ViewData["Title"] = "Access Denied";
+}
+
+<!-- =================================================================================== -->
+
+<div class="web-content">
+    <h2>@ViewData["accessDenied.text"]</h2>
+
+    <a asp-area="" asp-controller="Home" asp-action="Index">@ViewData["accessDenied.backHome"]</a>
+</div>
+
+<!-- =================================================================================== -->

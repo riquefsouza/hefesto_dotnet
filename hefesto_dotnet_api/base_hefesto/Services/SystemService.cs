@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using hefesto.base_hefesto.Models;
 using hefesto.admin.Services;
 using hefesto.admin.VO;
+using BC = BCrypt.Net.BCrypt;
 
 namespace hefesto.base_hefesto.Services
 {
@@ -216,15 +217,21 @@ namespace hefesto.base_hefesto.Services
             return serviceMenu.ToListMenuVO(listaAdminMenuParent);
         }
 
-        public bool Authenticate(AdmUser admUser)
+        public bool Authenticate(UserVO admUser)
         {
             AdmUser user = userService.FindByLogin(admUser.Login);
 
-            //Set<AdmProfile> roles = new HashSet<AdmProfile>(profileRepository.findProfilesByUser(user.get().getId()));
-
-            UserVO userVO = new UserVO(user.Id, user.Email, user.Login, user.Name, user.Active);
-            SetProperties(admUser.Login, userVO);
-		    return true;
+            if (user!=null)
+            {
+                if (BC.Verify(admUser.Password, user.Password))
+                {
+                    UserVO userVO = new UserVO(user.Id, user.Email, user.Login, user.Name, user.Active);
+                    SetProperties(admUser.Login, userVO);
+                    return true;
+                }
+            }
+            
+            return false;
         }
 
         private async void SetProperties(string login, UserVO userVO)

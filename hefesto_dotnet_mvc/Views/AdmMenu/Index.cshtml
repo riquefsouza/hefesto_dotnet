@@ -1,6 +1,6 @@
-@using hefesto.admin.Models
+@using hefesto.admin.VO
 
-@model IEnumerable<AdmMenu>
+@model IEnumerable<MenuVO>
 
 @{
     ViewData["Title"] = "List";
@@ -80,7 +80,7 @@
             <li>
                 <span class="caret">@adminMenu.Description</span>
                 <ul class="nested">
-                    @foreach (var adminSubmenu in adminMenu.AdmSubMenus)
+                    @foreach (var adminSubmenu in adminMenu.SubMenus)
                     {
                         <li name="@adminSubmenu.Id">
                             <span class="nodeText"

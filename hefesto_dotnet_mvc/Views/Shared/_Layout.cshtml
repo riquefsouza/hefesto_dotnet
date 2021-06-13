@@ -25,62 +25,66 @@
 </head>
 <body>
 
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container-fluid">
-            <a class="navbar-brand" id="anchorHomePage" href="~/home"
-               style="float: left; height: 50px; padding: 5px 5px; font-size: 14px; text-decoration:none">
-                <span>{main.framework}</span><br>
-                <span>{main.app.title}</span>
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item dropdown">
+    @if (((UserVO)ViewData["UserLogged"]).Active)
+    {
 
-                        @foreach (var menu in (IEnumerable<MenuVO>)@ViewData["MenuItem"])
-                        {
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                @menu.Description
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="container-fluid">
+                <a class="navbar-brand" id="anchorHomePage" href="~/home"
+                   style="float: left; height: 50px; padding: 5px 5px; font-size: 14px; text-decoration:none">
+                    <span>@ViewData["main.framework"]</span><br>
+                    <span>@ViewData["main.app.title"]</span>
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item dropdown">
 
+                            @foreach (var menu in (IEnumerable<MenuVO>)@ViewData["MenuItem"])
+                            {
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    @menu.Description
+
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <li>
+                                        @foreach (var submenu in menu.SubMenus)
+                                        {
+                                            <a class="dropdown-item" id="@submenu.View" asp-area="" asp-controller="@submenu.Name" asp-action="Index">
+                                                @submenu.Description
+                                            </a>
+                                        }
+                                    </li>
+                                </ul>
+                            }
+
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Login" asp-action="Logout">
+                                <span class="icon text-white-50">
+                                    <i class="fa fa-door-open"></i>
+                                </span>
+                                Sair
                             </a>
-                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <li>
-                                    @foreach (var submenu in menu.SubMenus)
-                                    {
-                                        <a class="dropdown-item" id="@submenu.View" asp-area="" asp-controller="@submenu.Name" asp-action="Index">
-                                            @submenu.Description
-                                        </a>
-                                    }
-                                </li>
-                            </ul>
-                        }
+                        </li>
 
-                    </li>
+                    </ul>
 
-                    <li class="nav-item">
-                        <a class="nav-link" href="~/logout">
-                            <span class="icon text-white-50">
-                                <i class="fa fa-door-open"></i>
-                            </span>
-                            Sair
-                        </a>
-                    </li>
+                    <div class="d-flex">
+                        <span class="icon text-white-50">
+                            <i class="fas fa-user fa-sm"></i>
+                            @Html.Raw(((UserVO)ViewData["UserLogged"]).Login)
+                        </span>
+                    </div>
 
-                </ul>
-
-                <div class="d-flex">
-                    <span class="icon text-white-50">
-                        <i class="fas fa-user fa-sm"></i>
-                        {username}
-                    </span>
                 </div>
-
             </div>
-        </div>
-    </nav>
+        </nav>
+    }
 
     @{await Html.RenderPartialAsync("AlertMessages", ViewData["AlertMessage"]);}
 

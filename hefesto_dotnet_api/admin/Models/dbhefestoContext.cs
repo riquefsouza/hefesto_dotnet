@@ -11,6 +11,7 @@ namespace hefesto.admin.Models
         public dbhefestoContext(DbContextOptions<dbhefestoContext> options)
             : base(options)
         {
+            //Npgsql.EntityFrameworkCore.PostgreSQL.Metadata.NpgsqlValueGenerationStrategy.SerialColumn
         }
 
         public virtual DbSet<AdmMenu> AdmMenus { get; set; }

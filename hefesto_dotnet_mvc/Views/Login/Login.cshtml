@@ -46,8 +46,8 @@
                             </div>
                             <input type="text" class="form-control" asp-for="Login" autofocus required="required" maxlength="64"
                                    placeholder="@ViewData["login.username.placeholder"]" />
-                            <span asp-validation-for="Login" class="text-danger"></span>
                         </div>
+                        <span asp-validation-for="Login" class="text-danger"></span>
                     </div>
                     <div class="form-group">
                         <label asp-for="Password">@ViewData["login.password"]</label>
@@ -59,8 +59,8 @@
                             </div>
                             <input type="password" class="form-control" asp-for="Password" required="required" maxlength="64"
                                    placeholder="@ViewData["login.password.placeholder"]" autocomplete="off" />
-                            <span asp-validation-for="Password" class="text-danger"></span>
                         </div>
+                        <span asp-validation-for="Password" class="text-danger"></span>
                     </div>
                     <div class="form-group">
                         <div style="margin: 0 auto; width:25%">

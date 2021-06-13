@@ -48,7 +48,7 @@
 
                     <label asp-for="IdPage">@ViewData["editAdmMenu.page"]</label>
                     <select asp-for="IdPage" class="form-select">
-                        @foreach (var itemPage in (IEnumerable<AdmMenu>)@ViewData["listAdmPages"])
+                        @foreach (var itemPage in (IEnumerable<AdmPage>)@ViewData["listAdmPages"])
                         {
                             @if (@Model != null && (itemPage.Id == @Model.IdPage))
                             {

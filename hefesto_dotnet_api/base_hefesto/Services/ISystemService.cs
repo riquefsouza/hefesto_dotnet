@@ -19,7 +19,7 @@ namespace hefesto.base_hefesto.Services
         List<MenuVO> FindMenuParentByProfile(List<long> listaIdProfile);
         List<MenuVO> FindAdminMenuParentByProfile(List<long> listaIdProfile);
 
-        bool Authenticate(AdmUser admUser);
+        bool Authenticate(UserVO admUser);
         List<MenuVO> GetListaMenus();
         List<MenuVO> GetListaAdminMenus();
         PageVO GetPagina(long idMenu);

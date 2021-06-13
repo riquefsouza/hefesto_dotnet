@@ -5,6 +5,7 @@ using hefesto.admin.Services;
 using hefesto.base_hefesto.Services;
 using hefesto.base_hefesto.Report;
 using hefesto.base_hefesto.Pagination;
+using Microsoft.AspNetCore.Authorization;
 
 namespace hefesto_dotnet_mvc.admin.Controllers
 {
@@ -21,6 +22,8 @@ namespace hefesto_dotnet_mvc.admin.Controllers
             _messageService = messageService;
         }
 
+        //[Authorize(Roles = "ADMIN")]
+        [Authorize]
         public async Task<IActionResult> Index([FromQuery] PaginationFilter filter)
         {
             LoadMessages();

@@ -6,6 +6,7 @@ using hefesto.admin.Models;
 using hefesto.admin.Services;
 using hefesto.base_hefesto.Services;
 using hefesto.base_hefesto.Report;
+using Microsoft.AspNetCore.Authorization;
 
 namespace hefesto_dotnet_mvc.admin.Controllers
 {
@@ -32,7 +33,7 @@ namespace hefesto_dotnet_mvc.admin.Controllers
             this.listAdmMenuParent = new List<AdmMenu>();
         }
 
-        private async void FillLists()
+        private async Task<bool> FillLists()
         {
             this.listAdmPage = await _servicePage.FindAll();
             ViewData["listAdmPages"] = listAdmPage;
@@ -49,9 +50,11 @@ namespace hefesto_dotnet_mvc.admin.Controllers
             }
 
             ViewData["listAdmMenuParents"] = listAdmMenuParent;
+
+            return true;
         }
 
-        private void filterLists(AdmMenu bean)
+        private void FilterLists(AdmMenu bean)
         {
             var page = listAdmPage.Where(p => p.Id.Equals(bean.AdmPage.Id)).First();
             if (page!=null)
@@ -69,11 +72,14 @@ namespace hefesto_dotnet_mvc.admin.Controllers
             }
         }
 
-        public async Task<IActionResult> Index()
+        [Authorize]
+        public IActionResult Index()
         {
             LoadMessages();
 
-            var listAdmMenu = await _service.FindAll();
+            //var listAdmMenu = await _service.FindAll();
+            var listAdmMenu = GetAuthenticatedUser().ListAdminMenus;
+
             return View(listAdmMenu);
         }
 
@@ -85,7 +91,7 @@ namespace hefesto_dotnet_mvc.admin.Controllers
                 return NotFound();
             }
 
-            FillLists();
+            await FillLists();
             LoadMessages();
 
             if (id > 0)
@@ -96,12 +102,14 @@ namespace hefesto_dotnet_mvc.admin.Controllers
                     return NotFound();
                 }
 
-                filterLists(admMenu);
+                FilterLists(admMenu);
 
                 return View(admMenu);
             } else
             {
-                return View();
+                var admMenu = new AdmMenu();
+
+                return View(admMenu);
             }
         }
 
@@ -125,7 +133,7 @@ namespace hefesto_dotnet_mvc.admin.Controllers
                         return NotFound();
                     }
 
-                    filterLists(admMenu);
+                    FilterLists(admMenu);
 
                     return RedirectToAction(nameof(Index));
                 }
@@ -136,7 +144,7 @@ namespace hefesto_dotnet_mvc.admin.Controllers
                 {
                     await _service.Insert(admMenu);
 
-                    filterLists(admMenu);
+                    FilterLists(admMenu);
 
                     return RedirectToAction(nameof(Index));
                 }

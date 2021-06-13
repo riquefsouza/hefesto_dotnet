@@ -14,6 +14,7 @@ using hefesto.admin.Services;
 using hefesto.base_hefesto.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Razor;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace hefesto_dotnet_mvc
 {
@@ -44,6 +45,10 @@ namespace hefesto_dotnet_mvc
             services.AddScoped<IMessageService, MessageService>();
             services.AddScoped<ISystemService, SystemService>();
             services.AddScoped<IModeTestService, ModeTestService>();
+
+            // Enable cookie authentication
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                    .AddCookie();
 
             services.AddHttpContextAccessor();
             services.AddSingleton<IUriService>(o =>
@@ -98,6 +103,9 @@ namespace hefesto_dotnet_mvc
             app.UseStaticFiles();
 
             app.UseRouting();
+
+            // Add authentication to request pipeline
+            app.UseAuthentication();
 
             app.UseAuthorization();
 
