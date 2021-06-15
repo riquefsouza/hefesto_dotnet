@@ -7,6 +7,6 @@ namespace hefesto.admin.Services
 {
     public interface IAdmParameterCategoryService : IBaseCrud<AdmParameterCategory, long>
     {
-        
+        long GetNextSequenceValue();
     }
 }

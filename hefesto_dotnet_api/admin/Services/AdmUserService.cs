@@ -13,15 +13,16 @@ namespace hefesto.admin.Services
 {
     public class AdmUserService : IAdmUserService
     {
-        private readonly dbhefestoContext _context;
+        private readonly IDbContextFactory<dbhefestoContext> _contextFactory;
 
         private readonly IAdmUserProfileService _service;
 
         private readonly IUriService _uriService;
 
-        public AdmUserService(dbhefestoContext context, IAdmUserProfileService service, IUriService uriService)
+        public AdmUserService(IDbContextFactory<dbhefestoContext> contextFactory, 
+            IAdmUserProfileService service, IUriService uriService)
         {
-            _context = context;
+            _contextFactory = contextFactory;
             _uriService = uriService;
             _service = service;
         }
@@ -49,123 +50,153 @@ namespace hefesto.admin.Services
 
         public async Task<BasePaged<AdmUser>> GetPage(string route, PaginationFilter filter)
         {
-            var validFilter = new PaginationFilter(filter.pageNumber, filter.size, filter.sort,
+            using (var _context = _contextFactory.CreateDbContext())
+            {
+
+                var validFilter = new PaginationFilter(filter.pageNumber, filter.size, filter.sort,
                 filter.columnOrder, filter.columnTitle);
 
-            var pagedData = await _context.AdmUsers
-                .Skip((validFilter.pageNumber - 1) * validFilter.size)
-                .Take(validFilter.size)
-                .ToListAsync();
-            var totalRecords = await _context.AdmUsers.CountAsync();
-            this.SetTransient(pagedData);
+                var pagedData = await _context.AdmUsers
+                    .Skip((validFilter.pageNumber - 1) * validFilter.size)
+                    .Take(validFilter.size)
+                    .ToListAsync();
+                var totalRecords = await _context.AdmUsers.CountAsync();
+                this.SetTransient(pagedData);
 
-            return new BasePaged<AdmUser>(pagedData,
-                BasePaging.of(validFilter, totalRecords, _uriService, route));
+                return new BasePaged<AdmUser>(pagedData,
+                    BasePaging.of(validFilter, totalRecords, _uriService, route));
+            }
         }
 
         public async Task<List<AdmUser>> FindAll()
         {
-            var listObj = await _context.AdmUsers.ToListAsync();
-            this.SetTransient(listObj);
-            return listObj;
+            using (var _context = _contextFactory.CreateDbContext())
+            {
+                var listObj = await _context.AdmUsers.ToListAsync();
+                this.SetTransient(listObj);
+                return listObj;
+            }
         }
 
         public async Task<AdmUser> FindById(long? id)
         {
-            var obj = await _context.AdmUsers.FindAsync(id);
-
-            if (obj != null)
+            using (var _context = _contextFactory.CreateDbContext())
             {
-                this.SetTransient(obj);
-            }
+                var obj = await _context.AdmUsers.FindAsync(id);
 
-            return obj;
+                if (obj != null)
+                {
+                    this.SetTransient(obj);
+                }
+
+                return obj;
+            }
         }
 
         public async Task<bool> Update(long id, AdmUser obj)
         {
-            _context.Entry(obj).State = EntityState.Modified;
-
-            try
+            using (var _context = _contextFactory.CreateDbContext())
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!this.Exists(id))
-                {
-                    return false;
-                }
-                else
-                {
-                    throw;
-                }
-            }
+                _context.Entry(obj).State = EntityState.Modified;
 
-            return true;
+                try
+                {
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!this.Exists(id))
+                    {
+                        return false;
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+
+                return true;
+            }
         }
 
         public async Task<AdmUser> Insert(AdmUser obj)
         {
-            obj.Id = this.GetNextSequenceValue();
-
-            _context.AdmUsers.Add(obj);
-            try
+            using (var _context = _contextFactory.CreateDbContext())
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateException)
-            {
-                if (this.Exists(obj.Id))
-                {
-                    return null;
-                }
-                else
-                {
-                    throw;
-                }
-            }
+                obj.Id = this.GetNextSequenceValue();
 
-            return obj;
+                _context.AdmUsers.Add(obj);
+                try
+                {
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateException)
+                {
+                    if (this.Exists(obj.Id))
+                    {
+                        return null;
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+
+                return obj;
+            }
         }
 
         public async Task<bool> Delete(long id)
         {
-            var obj = await _context.AdmUsers.FindAsync(id);
-            if (obj == null)
+            using (var _context = _contextFactory.CreateDbContext())
             {
-                return false;
+                var obj = await _context.AdmUsers.FindAsync(id);
+                if (obj == null)
+                {
+                    return false;
+                }
+
+                _context.AdmUsers.Remove(obj);
+                await _context.SaveChangesAsync();
+
+                return true;
             }
-
-            _context.AdmUsers.Remove(obj);
-            await _context.SaveChangesAsync();
-
-            return true;
         }
 
         public bool Exists(long id)
         {
-            return _context.AdmUsers.Any(e => e.Id == id);
+            using (var _context = _contextFactory.CreateDbContext())
+            {
+                return _context.AdmUsers.Any(e => e.Id == id);
+            }
         }
 
         private long GetNextSequenceValue()
         {
-            var rawQuery = _context.Set<SequenceValue>().FromSqlRaw("select nextval('public.adm_user_seq') as Value;");
-            var nextVal = rawQuery.AsEnumerable().First().Value;
+            using (var _context = _contextFactory.CreateDbContext())
+            {
+                var rawQuery = _context.Set<SequenceValue>().FromSqlRaw("select nextval('public.adm_user_seq') as Value;");
+                var nextVal = rawQuery.AsEnumerable().First().Value;
 
-            return nextVal;
+                return nextVal;
+            }
         }
 
         public async Task<AdmUser> Authenticate(string login, string password)
         {
-            var admUser = await _context.AdmUsers.FirstOrDefaultAsync(u => u.Login == login);
-            
-            if (admUser != null){
-                if (VerifyPassword(password, admUser.Password)){
-                    return admUser;
+            using (var _context = _contextFactory.CreateDbContext())
+            {
+                var admUser = await _context.AdmUsers.FirstOrDefaultAsync(u => u.Login == login);
+
+                if (admUser != null)
+                {
+                    if (VerifyPassword(password, admUser.Password))
+                    {
+                        return admUser;
+                    }
                 }
+                return null;
             }
-            return null;
         }
 
         public bool VerifyPassword(string password, string hashPassword)
@@ -190,24 +221,30 @@ namespace hefesto.admin.Services
 
         public AdmUser FindByLogin(string login)
         {
-            var query = _context.AdmUsers.AsQueryable();
-            query = _context.AdmUsers.Where(adm => adm.Login.Equals(login)).Distinct();
+            using (var _context = _contextFactory.CreateDbContext())
+            {
+                var query = _context.AdmUsers.AsQueryable();
+                query = _context.AdmUsers.Where(adm => adm.Login.Equals(login)).Distinct();
 
-            var obj = query.FirstOrDefault();
-            this.SetTransient(obj);
+                var obj = query.FirstOrDefault();
+                this.SetTransient(obj);
 
-            return obj;
+                return obj;
+            }
         }
 
         public List<AdmUser> FindAdmUserByLikeEmail(string email)
         {
-            var query = _context.AdmUsers.AsQueryable();
-            query = _context.AdmUsers.Where(adm => adm.Email.Contains(email)).Distinct();
-            
-            var listObj =  query.ToList();
-            this.SetTransient(listObj);
+            using (var _context = _contextFactory.CreateDbContext())
+            {
+                var query = _context.AdmUsers.AsQueryable();
+                query = _context.AdmUsers.Where(adm => adm.Email.Contains(email)).Distinct();
 
-            return listObj;
+                var listObj = query.ToList();
+                this.SetTransient(listObj);
+
+                return listObj;
+            }
         }
 
         public List<UserVO> FindByLikeEmail(string email)

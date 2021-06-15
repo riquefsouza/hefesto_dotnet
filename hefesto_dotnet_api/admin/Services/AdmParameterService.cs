@@ -11,165 +11,198 @@ namespace hefesto.admin.Services
 {
     public class AdmParameterService : IAdmParameterService
     {
-        private readonly dbhefestoContext _context;
+        private readonly IDbContextFactory<dbhefestoContext> _contextFactory;
 
         private readonly IUriService _uriService;
 
-        public AdmParameterService(dbhefestoContext context, IUriService uriService)
+        public AdmParameterService(IDbContextFactory<dbhefestoContext> contextFactory, IUriService uriService)
         {
-            _context = context;
+            _contextFactory = contextFactory;
             _uriService = uriService;
         }
 
         public void SetTransient(List<AdmParameter> list)
         {
-            foreach (var item in list)
+            using (var _context = _contextFactory.CreateDbContext())
             {
-                item.AdmParameterCategory = _context.AdmParameterCategories.Find(item.IdParameterCategory); 
+                foreach (var item in list)
+                {
+                    item.AdmParameterCategory = _context.AdmParameterCategories.Find(item.IdParameterCategory);
+                }
             }
         }
 
         public void SetTransient(AdmParameter item)
         {
-            item.AdmParameterCategory = _context.AdmParameterCategories.Find(item.IdParameterCategory); 
+            using (var _context = _contextFactory.CreateDbContext())
+            {
+                item.AdmParameterCategory = _context.AdmParameterCategories.Find(item.IdParameterCategory);
+            }
         }
 
         public async Task<BasePaged<AdmParameter>> GetPage(string route, PaginationFilter filter)
         {
-            var validFilter = new PaginationFilter(filter.pageNumber, filter.size, filter.sort,
+            using (var _context = _contextFactory.CreateDbContext())
+            {
+                var validFilter = new PaginationFilter(filter.pageNumber, filter.size, filter.sort,
                 filter.columnOrder, filter.columnTitle);
 
-            var pagedData = await _context.AdmParameters
-                .Skip((validFilter.pageNumber - 1) * validFilter.size)
-                .Take(validFilter.size)
-                .ToListAsync();
-            var totalRecords = await _context.AdmParameters.CountAsync();
+                var pagedData = await _context.AdmParameters
+                    .Skip((validFilter.pageNumber - 1) * validFilter.size)
+                    .Take(validFilter.size)
+                    .ToListAsync();
+                var totalRecords = await _context.AdmParameters.CountAsync();
 
-            this.SetTransient(pagedData);
+                this.SetTransient(pagedData);
 
-            return new BasePaged<AdmParameter>(pagedData,
-                BasePaging.of(validFilter, totalRecords, _uriService, route));
+                return new BasePaged<AdmParameter>(pagedData,
+                    BasePaging.of(validFilter, totalRecords, _uriService, route));
+            }
         }
 
         public async Task<List<AdmParameter>> FindAll()
         {
-            var listObj = await _context.AdmParameters.ToListAsync();
-            this.SetTransient(listObj);
-            return listObj;
+            using (var _context = _contextFactory.CreateDbContext())
+            {
+                var listObj = await _context.AdmParameters.ToListAsync();
+                this.SetTransient(listObj);
+                return listObj;
+            }
         }
 
         public async Task<AdmParameter> FindById(long? id)
         {
-            var obj = await _context.AdmParameters.FindAsync(id);
-
-            if (obj != null)
+            using (var _context = _contextFactory.CreateDbContext())
             {
-                this.SetTransient(obj);
-            }
+                var obj = await _context.AdmParameters.FindAsync(id);
 
-            return obj;
+                if (obj != null)
+                {
+                    this.SetTransient(obj);
+                }
+
+                return obj;
+            }
         }
 
         public async Task<bool> Update(long id, AdmParameter obj)
         {
-            if (obj.AdmParameterCategory != null)
+            using (var _context = _contextFactory.CreateDbContext())
             {
-                obj.IdParameterCategory = obj.AdmParameterCategory.Id;
-                obj.AdmParameterCategory = null;
-            }
-
-            _context.Entry(obj).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!this.Exists(id))
+                if (obj.AdmParameterCategory != null)
                 {
-                    return false;
+                    obj.IdParameterCategory = obj.AdmParameterCategory.Id;
+                    obj.AdmParameterCategory = null;
                 }
-                else
-                {
-                    throw;
-                }
-            }
 
-            return true;
+                _context.Entry(obj).State = EntityState.Modified;
+
+                try
+                {
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!this.Exists(id))
+                    {
+                        return false;
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+
+                return true;
+            }
         }
 
         public async Task<AdmParameter> Insert(AdmParameter obj)
         {
-            if (obj.AdmParameterCategory != null)
+            using (var _context = _contextFactory.CreateDbContext())
             {
-                obj.IdParameterCategory = obj.AdmParameterCategory.Id;
-                obj.AdmParameterCategory = null;
-            }
-
-            obj.Id = this.GetNextSequenceValue();
-
-            _context.AdmParameters.Add(obj);
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateException)
-            {
-                if (this.Exists(obj.Id))
+                if (obj.AdmParameterCategory != null)
                 {
-                    return null;
+                    obj.IdParameterCategory = obj.AdmParameterCategory.Id;
+                    obj.AdmParameterCategory = null;
                 }
-                else
-                {
-                    throw;
-                }
-            }
 
-            return obj;
+                obj.Id = this.GetNextSequenceValue();
+
+                _context.AdmParameters.Add(obj);
+                try
+                {
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateException)
+                {
+                    if (this.Exists(obj.Id))
+                    {
+                        return null;
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+
+                return obj;
+            }
         }
 
         public async Task<bool> Delete(long id)
         {
-            var obj = await _context.AdmParameters.FindAsync(id);
-            if (obj == null)
+            using (var _context = _contextFactory.CreateDbContext())
             {
-                return false;
+                var obj = await _context.AdmParameters.FindAsync(id);
+                if (obj == null)
+                {
+                    return false;
+                }
+
+                _context.AdmParameters.Remove(obj);
+                await _context.SaveChangesAsync();
+
+                return true;
             }
-
-            _context.AdmParameters.Remove(obj);
-            await _context.SaveChangesAsync();
-
-            return true;
         }
 
         public bool Exists(long id)
         {
-            return _context.AdmParameters.Any(e => e.Id == id);
+            using (var _context = _contextFactory.CreateDbContext())
+            {
+                return _context.AdmParameters.Any(e => e.Id == id);
+            }
         }
 
         private long GetNextSequenceValue()
         {
-            var rawQuery = _context.Set<SequenceValue>().FromSqlRaw("select nextval('public.adm_parameter_seq') as Value;");
-            var nextVal = rawQuery.AsEnumerable().First().Value;
+            using (var _context = _contextFactory.CreateDbContext())
+            {
+                var rawQuery = _context.Set<SequenceValue>().FromSqlRaw("select nextval('public.adm_parameter_seq') as Value;");
+                var nextVal = rawQuery.AsEnumerable().First().Value;
 
-            return nextVal;
+                return nextVal;
+            }
         }
 
         public string GetValueByCode(string scode)
         {
-            try
+            using (var _context = _contextFactory.CreateDbContext())
             {
-                var svalue =
-                from p in _context.AdmParameters
-                where p.Code == scode
-                select p.Value;
+                try
+                {
+                    var svalue =
+                    from p in _context.AdmParameters
+                    where p.Code == scode
+                    select p.Value;
 
-                return svalue.Distinct().First();
-            }
-            catch (Exception)
-            {
-                return null;
+                    return svalue.Distinct().First();
+                }
+                catch (Exception)
+                {
+                    return null;
+                }
             }
         }
 

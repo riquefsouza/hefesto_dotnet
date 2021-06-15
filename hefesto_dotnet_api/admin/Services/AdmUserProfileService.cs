@@ -8,11 +8,11 @@ namespace hefesto.admin.Services
 {
     public class AdmUserProfileService : IAdmUserProfileService
     {
-        private readonly dbhefestoContext _context;
+        private readonly IDbContextFactory<dbhefestoContext> _contextFactory;
 
-        public AdmUserProfileService(dbhefestoContext context)
+        public AdmUserProfileService(IDbContextFactory<dbhefestoContext> contextFactory)
         {
-            _context = context;
+            _contextFactory = contextFactory;
         }
 
         public void SetTransient(List<AdmUserProfile> list)
@@ -25,49 +25,61 @@ namespace hefesto.admin.Services
 
         public void SetTransient(AdmUserProfile item)
         {
-            item.AdmUser = _context.AdmUsers.Find(item.IdUser);
-            item.AdmProfile = _context.AdmProfiles.Find(item.IdProfile);
+            using (var _context = _contextFactory.CreateDbContext())
+            {
+                item.AdmUser = _context.AdmUsers.Find(item.IdUser);
+                item.AdmProfile = _context.AdmProfiles.Find(item.IdProfile);
+            }
         }
 
         public async Task<List<AdmUserProfile>> FindAll()
         {
-            var listAdmUserProfile = await _context.AdmUserProfiles.ToListAsync();
-            SetTransient(listAdmUserProfile);
-            return listAdmUserProfile;
+            using (var _context = _contextFactory.CreateDbContext())
+            {
+                var listAdmUserProfile = await _context.AdmUserProfiles.ToListAsync();
+                SetTransient(listAdmUserProfile);
+                return listAdmUserProfile;
+            }
         }
 
         public List<AdmProfile> GetProfilesByUser(long admUserId)
         {
-            var query = _context.AdmUserProfiles.AsQueryable();
-            query = _context.AdmUserProfiles.Where(adm => adm.IdUser == admUserId);
-            var listAdmUserProfile = query.ToList();
-
-            List<AdmProfile> lista = new List<AdmProfile>();
-
-            foreach (var item in listAdmUserProfile)
+            using (var _context = _contextFactory.CreateDbContext())
             {
-                SetTransient(item);
-                lista.Add(item.AdmProfile);
-            }
+                var query = _context.AdmUserProfiles.AsQueryable();
+                query = _context.AdmUserProfiles.Where(adm => adm.IdUser == admUserId);
+                var listAdmUserProfile = query.ToList();
 
-            return lista;
+                List<AdmProfile> lista = new List<AdmProfile>();
+
+                foreach (var item in listAdmUserProfile)
+                {
+                    SetTransient(item);
+                    lista.Add(item.AdmProfile);
+                }
+
+                return lista;
+            }
         }
 
         public List<AdmUser> GetUsersByProfile(long admProfileId)
         {
-            var query = _context.AdmUserProfiles.AsQueryable();
-            query = _context.AdmUserProfiles.Where(adm => adm.IdProfile == admProfileId);
-            var listAdmUserProfile = query.ToList();
-
-            List<AdmUser> lista = new List<AdmUser>();
-
-            foreach (var item in listAdmUserProfile)
+            using (var _context = _contextFactory.CreateDbContext())
             {
-                SetTransient(item);
-                lista.Add(item.AdmUser);
-            }
+                var query = _context.AdmUserProfiles.AsQueryable();
+                query = _context.AdmUserProfiles.Where(adm => adm.IdProfile == admProfileId);
+                var listAdmUserProfile = query.ToList();
 
-            return lista;
+                List<AdmUser> lista = new List<AdmUser>();
+
+                foreach (var item in listAdmUserProfile)
+                {
+                    SetTransient(item);
+                    lista.Add(item.AdmUser);
+                }
+
+                return lista;
+            }
         }
 
     }

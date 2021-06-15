@@ -8,11 +8,11 @@ namespace hefesto.admin.Services
 {
     public class AdmPageProfileService : IAdmPageProfileService
     {
-        private readonly dbhefestoContext _context;
+        private readonly IDbContextFactory<dbhefestoContext> _contextFactory;
 
-        public AdmPageProfileService(dbhefestoContext context)
+        public AdmPageProfileService(IDbContextFactory<dbhefestoContext> contextFactory)
         {
-            _context = context;
+            _contextFactory = contextFactory;
         }
 
         public void SetTransient(List<AdmPageProfile> list)
@@ -25,49 +25,61 @@ namespace hefesto.admin.Services
 
         public void SetTransient(AdmPageProfile item)
         {
-            item.AdmPage = _context.AdmPages.Find(item.IdPage);
-            item.AdmProfile = _context.AdmProfiles.Find(item.IdProfile);
+            using (var _context = _contextFactory.CreateDbContext())
+            {
+                item.AdmPage = _context.AdmPages.Find(item.IdPage);
+                item.AdmProfile = _context.AdmProfiles.Find(item.IdProfile);
+            }
         }
 
         public async Task<List<AdmPageProfile>> FindAll()
         {
-            var listAdmPageProfile = await _context.AdmPageProfiles.ToListAsync();
-            SetTransient(listAdmPageProfile);
-            return listAdmPageProfile;
+            using (var _context = _contextFactory.CreateDbContext())
+            {
+                var listAdmPageProfile = await _context.AdmPageProfiles.ToListAsync();
+                SetTransient(listAdmPageProfile);
+                return listAdmPageProfile;
+            }
         }
 
         public List<AdmProfile> GetProfilesByPage(long admPageId)
         {
-            var query = _context.AdmPageProfiles.AsQueryable();
-            query = _context.AdmPageProfiles.Where(adm => adm.IdPage == admPageId);
-            var listAdmPageProfile = query.ToList();
-
-            List<AdmProfile> lista = new List<AdmProfile>();
-
-            foreach (var item in listAdmPageProfile)
+            using (var _context = _contextFactory.CreateDbContext())
             {
-                SetTransient(item);
-                lista.Add(item.AdmProfile);
-            }
+                var query = _context.AdmPageProfiles.AsQueryable();
+                query = _context.AdmPageProfiles.Where(adm => adm.IdPage == admPageId);
+                var listAdmPageProfile = query.ToList();
 
-            return lista;
+                List<AdmProfile> lista = new List<AdmProfile>();
+
+                foreach (var item in listAdmPageProfile)
+                {
+                    SetTransient(item);
+                    lista.Add(item.AdmProfile);
+                }
+
+                return lista;
+            }
         }
 
         public List<AdmPage> GetPagesByProfile(long admProfileId)
         {
-            var query = _context.AdmPageProfiles.AsQueryable();
-            query = _context.AdmPageProfiles.Where(adm => adm.IdProfile == admProfileId);
-            var listAdmPageProfile = query.ToList();
-
-            List<AdmPage> lista = new List<AdmPage>();
-
-            foreach (var item in listAdmPageProfile)
+            using (var _context = _contextFactory.CreateDbContext())
             {
-                SetTransient(item);
-                lista.Add(item.AdmPage);
-            }
+                var query = _context.AdmPageProfiles.AsQueryable();
+                query = _context.AdmPageProfiles.Where(adm => adm.IdProfile == admProfileId);
+                var listAdmPageProfile = query.ToList();
 
-            return lista;
+                List<AdmPage> lista = new List<AdmPage>();
+
+                foreach (var item in listAdmPageProfile)
+                {
+                    SetTransient(item);
+                    lista.Add(item.AdmPage);
+                }
+
+                return lista;
+            }
         }
     }
 }

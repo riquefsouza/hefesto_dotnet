@@ -11,15 +11,15 @@ namespace hefesto.admin.Services
 {
     public class AdmPageService : IAdmPageService
     {
-        private readonly dbhefestoContext _context;
+        private readonly IDbContextFactory<dbhefestoContext> _contextFactory;
 
         private readonly IAdmPageProfileService _service;
 
         private readonly IUriService _uriService;
 
-        public AdmPageService(dbhefestoContext context, IAdmPageProfileService service, IUriService uriService)
+        public AdmPageService(IDbContextFactory<dbhefestoContext> contextFactory, IAdmPageProfileService service, IUriService uriService)
         {
-            _context = context;
+            _contextFactory = contextFactory;
             _uriService = uriService;
             _service = service;
         }
@@ -44,111 +44,135 @@ namespace hefesto.admin.Services
 
         public async Task<BasePaged<AdmPage>> GetPage(string route, PaginationFilter filter)
         {
-            var validFilter = new PaginationFilter(filter.pageNumber, filter.size, filter.sort,
+            using (var _context = _contextFactory.CreateDbContext())
+            {
+                var validFilter = new PaginationFilter(filter.pageNumber, filter.size, filter.sort,
                 filter.columnOrder, filter.columnTitle);
 
-            var pagedData = await _context.AdmPages
-                .Skip((validFilter.pageNumber - 1) * validFilter.size)
-                .Take(validFilter.size)
-                .ToListAsync();
-            var totalRecords = await _context.AdmPages.CountAsync();
-            this.SetTransient(pagedData);
+                var pagedData = await _context.AdmPages
+                    .Skip((validFilter.pageNumber - 1) * validFilter.size)
+                    .Take(validFilter.size)
+                    .ToListAsync();
+                var totalRecords = await _context.AdmPages.CountAsync();
+                this.SetTransient(pagedData);
 
-            return new BasePaged<AdmPage>(pagedData,
-                BasePaging.of(validFilter, totalRecords, _uriService, route));
+                return new BasePaged<AdmPage>(pagedData,
+                    BasePaging.of(validFilter, totalRecords, _uriService, route));
+            }
         }
 
         public async Task<List<AdmPage>> FindAll()
         {
-            var listObj = await _context.AdmPages.ToListAsync();
-            this.SetTransient(listObj);
-            return listObj;
+            using (var _context = _contextFactory.CreateDbContext())
+            {
+                var listObj = await _context.AdmPages.ToListAsync();
+                this.SetTransient(listObj);
+                return listObj;
+            }
         }
 
         public async Task<AdmPage> FindById(long? id)
         {
-            var obj = await _context.AdmPages.FindAsync(id);
-
-            if (obj != null)
+            using (var _context = _contextFactory.CreateDbContext())
             {
-                this.SetTransient(obj);
-            }
+                var obj = await _context.AdmPages.FindAsync(id);
 
-            return obj;
+                if (obj != null)
+                {
+                    this.SetTransient(obj);
+                }
+
+                return obj;
+            }
         }
 
         public async Task<bool> Update(long id, AdmPage obj)
         {
-            _context.Entry(obj).State = EntityState.Modified;
-
-            try
+            using (var _context = _contextFactory.CreateDbContext())
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!this.Exists(id))
-                {
-                    return false;
-                }
-                else
-                {
-                    throw;
-                }
-            }
+                _context.Entry(obj).State = EntityState.Modified;
 
-            return true;
+                try
+                {
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!this.Exists(id))
+                    {
+                        return false;
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+
+                return true;
+            }
         }
 
         public async Task<AdmPage> Insert(AdmPage obj)
         {
-            obj.Id = this.GetNextSequenceValue();
-
-            _context.AdmPages.Add(obj);
-            try
+            using (var _context = _contextFactory.CreateDbContext())
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateException)
-            {
-                if (this.Exists(obj.Id))
-                {
-                    return null;
-                }
-                else
-                {
-                    throw;
-                }
-            }
+                obj.Id = this.GetNextSequenceValue();
 
-            return obj;
+                _context.AdmPages.Add(obj);
+                try
+                {
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateException)
+                {
+                    if (this.Exists(obj.Id))
+                    {
+                        return null;
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+
+                return obj;
+            }
         }
 
         public async Task<bool> Delete(long id)
         {
-            var obj = await _context.AdmPages.FindAsync(id);
-            if (obj == null)
+            using (var _context = _contextFactory.CreateDbContext())
             {
-                return false;
+                var obj = await _context.AdmPages.FindAsync(id);
+                if (obj == null)
+                {
+                    return false;
+                }
+
+                _context.AdmPages.Remove(obj);
+                await _context.SaveChangesAsync();
+
+                return true;
             }
-
-            _context.AdmPages.Remove(obj);
-            await _context.SaveChangesAsync();
-
-            return true;
         }
 
         public bool Exists(long id)
         {
-            return _context.AdmPages.Any(e => e.Id == id);
+            using (var _context = _contextFactory.CreateDbContext())
+            {
+                return _context.AdmPages.Any(e => e.Id == id);
+            }
         }
 
         private long GetNextSequenceValue()
         {
-            var rawQuery = _context.Set<SequenceValue>().FromSqlRaw("select nextval('public.adm_page_seq') as Value;");
-            var nextVal = rawQuery.AsEnumerable().First().Value;
+            using (var _context = _contextFactory.CreateDbContext())
+            {
+                var rawQuery = _context.Set<SequenceValue>().FromSqlRaw("select nextval('public.adm_page_seq') as Value;");
+                var nextVal = rawQuery.AsEnumerable().First().Value;
 
-            return nextVal;
+                return nextVal;
+            }
         }
     }
 }

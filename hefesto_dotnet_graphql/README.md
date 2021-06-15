@@ -1,5 +1,10 @@
 # Hefesto Dotnet GraphQL
 
+https://localhost:5001/graphql/
+
+https://localhost:5001/graphql-voyager
+
+
 ```
 dotnet new web -n hefesto_dotnet_graphql
 
@@ -81,4 +86,29 @@ mutation{
     }
   }
 }
+
+mutation{
+  admParameterCategoryUpdate(input: {
+    id: 40,
+    description: "BETA",
+    order: 32
+  }){
+    admParameterCategory{
+      id
+      description
+      order
+      admParameters{
+        id
+        description
+      }
+    }
+  }
+}
+
+
+mutation{
+  admParameterCategoryDelete(id: 40)
+}
+
+
 ```

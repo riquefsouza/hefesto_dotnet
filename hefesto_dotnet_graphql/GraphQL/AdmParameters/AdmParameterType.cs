@@ -15,14 +15,14 @@ namespace hefesto_dotnet_graphql.GraphQL.AdmParameters
             descriptor.Description("Represents the parameter");
 
             descriptor.Field(p => p.AdmParameterCategory)
-            .ResolveWith<Resolvers>(p => p.GetAdmParameterCategoryies(default!, default!))
+            .ResolveWith<Resolvers>(p => p.GetAdmParameterCategory(default!, default!))
             .UseDbContext<dbhefestoContext>()
             .Description("This is the category to which the parameter belongs");
         }
 
         private class Resolvers
         {
-            public AdmParameterCategory GetAdmParameterCategoryies(AdmParameter admParameter, 
+            public AdmParameterCategory GetAdmParameterCategory(AdmParameter admParameter, 
                 [ScopedService] dbhefestoContext context)
             {
                 return context.AdmParameterCategories.FirstOrDefault(p => p.Id == admParameter.Id);

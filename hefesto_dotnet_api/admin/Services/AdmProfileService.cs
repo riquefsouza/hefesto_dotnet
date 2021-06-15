@@ -12,16 +12,16 @@ namespace hefesto.admin.Services
 {
     public class AdmProfileService : IAdmProfileService
     {
-        private readonly dbhefestoContext _context;
+        private readonly IDbContextFactory<dbhefestoContext> _contextFactory;
         private readonly IAdmPageProfileService _servicePageProfile;
         private readonly IAdmUserProfileService _serviceUserProfile;
         
         private readonly IUriService _uriService;
 
-        public AdmProfileService(dbhefestoContext context, IUriService uriService,
+        public AdmProfileService(IDbContextFactory<dbhefestoContext> contextFactory, IUriService uriService,
             IAdmPageProfileService servicePageProfile, IAdmUserProfileService serviceUserProfile)
         {
-            _context = context;
+            _contextFactory = contextFactory;
             _uriService = uriService;
             _servicePageProfile = servicePageProfile;
             _serviceUserProfile = serviceUserProfile;
@@ -69,119 +69,146 @@ namespace hefesto.admin.Services
 
         public async Task<BasePaged<AdmProfile>> GetPage(string route, PaginationFilter filter)
         {
-            var validFilter = new PaginationFilter(filter.pageNumber, filter.size, filter.sort,
+            using (var _context = _contextFactory.CreateDbContext())
+            {
+                var validFilter = new PaginationFilter(filter.pageNumber, filter.size, filter.sort,
                 filter.columnOrder, filter.columnTitle);
 
-            var pagedData = await _context.AdmProfiles
-                .Skip((validFilter.pageNumber - 1) * validFilter.size)
-                .Take(validFilter.size)
-                .ToListAsync();
-            var totalRecords = await _context.AdmProfiles.CountAsync();
-            this.SetTransient(pagedData);
+                var pagedData = await _context.AdmProfiles
+                    .Skip((validFilter.pageNumber - 1) * validFilter.size)
+                    .Take(validFilter.size)
+                    .ToListAsync();
+                var totalRecords = await _context.AdmProfiles.CountAsync();
+                this.SetTransient(pagedData);
 
-            return new BasePaged<AdmProfile>(pagedData,
-                BasePaging.of(validFilter, totalRecords, _uriService, route));
+                return new BasePaged<AdmProfile>(pagedData,
+                    BasePaging.of(validFilter, totalRecords, _uriService, route));
+            }
         }
 
         public async Task<List<AdmProfile>> FindAll()
         {
-            var listObj = await _context.AdmProfiles.ToListAsync();
-            this.SetTransient(listObj);
-            return listObj;
+            using (var _context = _contextFactory.CreateDbContext())
+            {
+                var listObj = await _context.AdmProfiles.ToListAsync();
+                this.SetTransient(listObj);
+                return listObj;
+            }
         }
 
         public async Task<AdmProfile> FindById(long? id)
         {
-            var obj = await _context.AdmProfiles.FindAsync(id);
-
-            if (obj != null)
+            using (var _context = _contextFactory.CreateDbContext())
             {
-                this.SetTransient(obj);
-            }
+                var obj = await _context.AdmProfiles.FindAsync(id);
 
-            return obj;
+                if (obj != null)
+                {
+                    this.SetTransient(obj);
+                }
+
+                return obj;
+            }
         }
 
         public async Task<bool> Update(long id, AdmProfile obj)
         {
-            _context.Entry(obj).State = EntityState.Modified;
-
-            try
+            using (var _context = _contextFactory.CreateDbContext())
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!this.Exists(id))
-                {
-                    return false;
-                }
-                else
-                {
-                    throw;
-                }
-            }
+                _context.Entry(obj).State = EntityState.Modified;
 
-            return true;
+                try
+                {
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!this.Exists(id))
+                    {
+                        return false;
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+
+                return true;
+            }
         }
 
         public async Task<AdmProfile> Insert(AdmProfile obj)
         {
-            obj.Id = this.GetNextSequenceValue();
-
-            _context.AdmProfiles.Add(obj);
-            try
+            using (var _context = _contextFactory.CreateDbContext())
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateException)
-            {
-                if (this.Exists(obj.Id))
-                {
-                    return null;
-                }
-                else
-                {
-                    throw;
-                }
-            }
+                obj.Id = this.GetNextSequenceValue();
 
-            return obj;
+                _context.AdmProfiles.Add(obj);
+                try
+                {
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateException)
+                {
+                    if (this.Exists(obj.Id))
+                    {
+                        return null;
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+
+                return obj;
+            }
         }
 
         public async Task<bool> Delete(long id)
         {
-            var obj = await _context.AdmProfiles.FindAsync(id);
-            if (obj == null)
+            using (var _context = _contextFactory.CreateDbContext())
             {
-                return false;
+                var obj = await _context.AdmProfiles.FindAsync(id);
+                if (obj == null)
+                {
+                    return false;
+                }
+
+                _context.AdmProfiles.Remove(obj);
+                await _context.SaveChangesAsync();
+
+                return true;
             }
-
-            _context.AdmProfiles.Remove(obj);
-            await _context.SaveChangesAsync();
-
-            return true;
         }
 
         public bool Exists(long id)
         {
-            return _context.AdmProfiles.Any(e => e.Id == id);
+            using (var _context = _contextFactory.CreateDbContext())
+            {
+                return _context.AdmProfiles.Any(e => e.Id == id);
+            }
         }
 
         private long GetNextSequenceValue()
         {
-            var rawQuery = _context.Set<SequenceValue>().FromSqlRaw("select nextval('public.adm_profile_seq') as Value;");
-            var nextVal = rawQuery.AsEnumerable().First().Value;
+            using (var _context = _contextFactory.CreateDbContext())
+            {
+                var rawQuery = _context.Set<SequenceValue>().FromSqlRaw("select nextval('public.adm_profile_seq') as Value;");
+                var nextVal = rawQuery.AsEnumerable().First().Value;
 
-            return nextVal;
+                return nextVal;
+            }
         }
 
         public List<AdmProfile> FindByGeneral(bool geral)
         {
-            var query = _context.AdmProfiles.AsQueryable();
-            //var cgeral = geral ? 'S' : 'N';
-            query = _context.AdmProfiles.Where(adm => adm.General.Equals(geral)).Distinct();
-            return query.ToList();
+            using (var _context = _contextFactory.CreateDbContext())
+            {
+                var query = _context.AdmProfiles.AsQueryable();
+                //var cgeral = geral ? 'S' : 'N';
+                query = _context.AdmProfiles.Where(adm => adm.General.Equals(geral)).Distinct();
+                return query.ToList();
+            }
         }
 
         public async Task<List<PermissionVO>> GetPermission(AuthenticatedUserVO authenticatedUser)

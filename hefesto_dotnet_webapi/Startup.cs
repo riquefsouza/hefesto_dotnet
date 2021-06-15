@@ -37,8 +37,9 @@ namespace hefesto_dotnet_webapi
         {
 
             var connection = Configuration.GetConnectionString("HefestoDatabase");
-            services.AddDbContextPool<dbhefestoContext>(options => options.UseNpgsql(connection));
-            
+            //services.AddDbContextPool<dbhefestoContext>(options => options.UseNpgsql(connection));
+            services.AddPooledDbContextFactory<dbhefestoContext>(options => options.UseNpgsql(connection));
+
             services.AddScoped<IAdmMenuService, AdmMenuService>();
             services.AddScoped<IAdmUserProfileService, AdmUserProfileService>();
             services.AddScoped<IAdmUserService, AdmUserService>();
