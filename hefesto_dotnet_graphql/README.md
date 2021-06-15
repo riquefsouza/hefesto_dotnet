@@ -88,8 +88,7 @@ mutation{
 }
 
 mutation{
-  admParameterCategoryUpdate(input: {
-    id: 40,
+  admParameterCategoryUpdate(id: 43, input: {
     description: "BETA",
     order: 32
   }){

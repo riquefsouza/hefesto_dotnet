@@ -13,5 +13,11 @@ namespace hefesto.admin.Models
 
         public virtual AdmProfile AdmProfile { get; set; }
         public virtual AdmUser AdmUser { get; set; }
+
+        public AdmUserProfile(long IdUser, long IdProfile)
+        {
+            this.IdUser = IdUser;
+            this.IdProfile = IdProfile;
+        }
     }
 }

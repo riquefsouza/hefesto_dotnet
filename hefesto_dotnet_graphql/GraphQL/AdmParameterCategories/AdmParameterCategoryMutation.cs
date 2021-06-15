@@ -11,13 +11,29 @@ using hefesto.admin.Services;
 
 namespace hefesto_dotnet_graphql.GraphQL.AdmParameterCategories
 {
-    public class AdmParameterCategoryMutation
+    public class AdmParameterCategoryMutation : IAdmParameterCategoryMutation
     {
         private readonly IAdmParameterCategoryService service;
 
         public AdmParameterCategoryMutation(IAdmParameterCategoryService service)
         {
             this.service = service;
+        }
+
+        private AdmParameterCategory SetObj(long? id, AdmParameterCategoryInput input)
+        {
+            var obj = new AdmParameterCategory
+            {
+                Description = input.Description,
+                Order = input.Order
+            };
+
+            if (id != null)
+            {
+                obj.Id = (long)id;
+            }
+
+            return obj;
         }
 
         [UseDbContext(typeof(dbhefestoContext))]
@@ -27,11 +43,7 @@ namespace hefesto_dotnet_graphql.GraphQL.AdmParameterCategories
             [Service] ITopicEventSender eventSender,
             CancellationToken cancellationToken)
         {
-            var obj = new AdmParameterCategory
-            {
-                Description = input.Description,
-                Order = input.Order
-            };
+            var obj = SetObj(null, input);
 
             obj.Id = this.service.GetNextSequenceValue();
 
@@ -49,12 +61,7 @@ namespace hefesto_dotnet_graphql.GraphQL.AdmParameterCategories
             AdmParameterCategoryInput input)
             //[ScopedService] dbhefestoContext context)
         {
-            var obj = new AdmParameterCategory
-            {
-                Id = id,
-                Description = input.Description,
-                Order = input.Order
-            };
+            var obj = SetObj(id, input);
 
             await this.service.Update(obj.Id, obj);
 

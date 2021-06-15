@@ -13,5 +13,11 @@ namespace hefesto.admin.Models
 
         public virtual AdmPage AdmPage { get; set; }
         public virtual AdmProfile AdmProfile { get; set; }
+
+        public AdmPageProfile(long IdPage, long IdProfile)
+        {
+            this.IdPage = IdPage;
+            this.IdProfile = IdProfile;
+        }
     }
 }

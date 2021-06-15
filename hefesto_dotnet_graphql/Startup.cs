@@ -17,6 +17,9 @@ using GraphQL.Server.Ui.Voyager;
 using hefesto_dotnet_graphql.GraphQL.AdmParameterCategories;
 using hefesto_dotnet_graphql.GraphQL.AdmParameters;
 using hefesto_dotnet_graphql.GraphQL.AdmMenus;
+using hefesto_dotnet_graphql.GraphQL.AdmPages;
+using hefesto_dotnet_graphql.GraphQL.AdmProfiles;
+using hefesto_dotnet_graphql.GraphQL.AdmUsers;
 
 namespace hefesto_dotnet_graphql
 {
@@ -55,14 +58,24 @@ namespace hefesto_dotnet_graphql
                 return new UriService(uri);
             });
 
+            services.AddScoped<IAdmMenuMutation, AdmMenuMutation>();
+            services.AddScoped<IAdmUserMutation, AdmUserMutation>();
+            services.AddScoped<IAdmPageMutation, AdmPageMutation>();
+            services.AddScoped<IAdmParameterCategoryMutation, AdmParameterCategoryMutation>();
+            services.AddScoped<IAdmParameterMutation, AdmParameterMutation>();
+            services.AddScoped<IAdmProfileMutation, AdmProfileMutation>();
+
             services
                 .AddGraphQLServer()
                 .AddQueryType<Query>()
-                .AddMutationType<AdmParameterCategoryMutation>()
+                .AddMutationType<Mutation>()
                 .AddSubscriptionType<Subscription>()
                 .AddType<AdmParameterCategoryType>()
                 .AddType<AdmParameterType>()
                 .AddType<AdmMenuType>()
+                .AddType<AdmPageType>()
+                .AddType<AdmProfileType>()
+                .AddType<AdmUserType>()
                 //.AddProjections();
                 .AddFiltering()
                 .AddSorting()
