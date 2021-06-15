@@ -20,7 +20,7 @@ namespace hefesto.admin.Models
         public string Description { get; set; }
         public long? Order { get; set; }
 
-         [JsonIgnore]
+        [JsonIgnore]
         public virtual ICollection<AdmParameter> AdmParameters { get; set; }
     }
 }

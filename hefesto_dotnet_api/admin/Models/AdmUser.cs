@@ -12,6 +12,9 @@ namespace hefesto.admin.Models
     public partial class AdmUser
     {
         public long Id { get; set; }
+
+        /*
+        [JsonIgnore]
         public char ActiveChar { get; set; }
 
         [NotMapped]
@@ -30,6 +33,8 @@ namespace hefesto.admin.Models
                     ActiveChar = 'N';
             } 
         }
+        */
+        public bool? Active { get; set; }
 
         public string Email { get; set; }
 

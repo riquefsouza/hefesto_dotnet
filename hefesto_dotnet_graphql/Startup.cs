@@ -13,6 +13,9 @@ using hefesto.admin.Models;
 using hefesto.admin.Services;
 using Microsoft.EntityFrameworkCore;
 using hefesto_dotnet_graphql.GraphQL;
+using GraphQL.Server.Ui.Voyager;
+using hefesto_dotnet_graphql.GraphQL.AdmParameterCategories;
+using hefesto_dotnet_graphql.GraphQL.AdmParameters;
 
 namespace hefesto_dotnet_graphql
 {
@@ -28,22 +31,20 @@ namespace hefesto_dotnet_graphql
         public void ConfigureServices(IServiceCollection services)
         {
             var connection = Configuration.GetConnectionString("HefestoDatabase");
-            services.AddDbContextPool<dbhefestoContext>(options => options.UseNpgsql(connection));
+            //services.AddDbContextPool<dbhefestoContext>(options => options.UseNpgsql(connection));
+            services.AddPooledDbContextFactory<dbhefestoContext>(options => options.UseNpgsql(connection));
 
-            /*
-            services.AddScoped<IAdmMenuService, AdmMenuService>();
-            services.AddScoped<IAdmUserProfileService, AdmUserProfileService>();
-            services.AddScoped<IAdmUserService, AdmUserService>();
-            services.AddScoped<IAdmPageProfileService, AdmPageProfileService>();
-            services.AddScoped<IAdmPageService, AdmPageService>();
-            services.AddScoped<IAdmParameterService, AdmParameterService>();
-            services.AddScoped<IAdmParameterCategoryService, AdmParameterCategoryService>();
-            services.AddScoped<IAdmProfileService, AdmProfileService>();
-            services.AddScoped<IChangePasswordService, ChangePasswordService>();
-            services.AddScoped<ISystemService, SystemService>();
-            */
-
-            services.AddGraphQLServer().AddQueryType<Query>();
+            services
+                .AddGraphQLServer()
+                .AddQueryType<Query>()
+                .AddMutationType<Mutation>()
+                .AddSubscriptionType<Subscription>()
+                .AddType<AdmParameterCategoryType>()
+                .AddType<AdmParameterType>()
+                //.AddProjections();
+                .AddFiltering()
+                .AddSorting()
+                .AddInMemorySubscriptions();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -54,12 +55,20 @@ namespace hefesto_dotnet_graphql
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseWebSockets();
+
             app.UseRouting();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapGraphQL();
             });
+
+            app.UseGraphQLVoyager(new VoyagerOptions()
+            {
+                GraphQLEndPoint = "/graphql"
+            }, "/graphql-voyager");
+            
         }
     }
 }

@@ -179,8 +179,8 @@ namespace hefesto.admin.Services
         public List<AdmProfile> FindByGeneral(bool geral)
         {
             var query = _context.AdmProfiles.AsQueryable();
-            var cgeral = geral ? 'S' : 'N';
-            query = _context.AdmProfiles.Where(adm => adm.GeneralChar.Equals(cgeral)).Distinct();
+            //var cgeral = geral ? 'S' : 'N';
+            query = _context.AdmProfiles.Where(adm => adm.General.Equals(geral)).Distinct();
             return query.ToList();
         }
 

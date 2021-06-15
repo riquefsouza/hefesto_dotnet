@@ -20,6 +20,9 @@ namespace hefesto.admin.Models
         }
 
         public long Id { get; set; }
+
+        /*
+        [JsonIgnore]
         public char AdministratorChar { get; set; }
 
         [NotMapped]
@@ -41,9 +44,14 @@ namespace hefesto.admin.Models
                     AdministratorChar = 'N';
             }
         }
+        */
+        public bool? Administrator { get; set; }
 
         [Required(ErrorMessage = "The field Description is required")]
         public string Description { get; set; }
+
+        /*
+        [JsonIgnore]
         public char GeneralChar { get; set; }
 
         [NotMapped]
@@ -65,6 +73,8 @@ namespace hefesto.admin.Models
                     GeneralChar = 'N';
             }
         }
+        */
+        public bool? General { get; set; }
 
         [JsonIgnore]
         public virtual ICollection<AdmPageProfile> AdmPageProfiles { get; set; }

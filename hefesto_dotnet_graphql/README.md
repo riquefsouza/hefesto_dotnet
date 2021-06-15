@@ -18,3 +18,67 @@ dotnet add package Npgsql.EntityFrameworkCore.PostgreSQL.Design
 
 ```
 
+```
+query{
+  admParameterCategory{
+    id
+    description
+    admParameters{
+      id
+      description
+    }
+  }
+}
+
+query{
+  admParameter{
+    id
+    description
+    admParameterCategory{
+      id
+      description
+    }
+  }
+}
+
+query{
+  admParameter(where: {id: {eq: 1}}){
+    id
+    description
+    admParameterCategory{
+      id
+      description
+    }
+  }
+}
+
+query{
+  admParameter(order: {description: DESC}){
+    id
+    description
+    admParameterCategory{
+      id
+      description
+    }
+  }
+}
+```
+
+```
+mutation{
+  admParameterCategoryInsert(input: {
+    description: "ALFA TESTE",
+    order: 23
+  }){
+    admParameterCategory{
+      id
+      description
+      order
+      admParameters{
+        id
+        description
+      }
+    }
+  }
+}
+```

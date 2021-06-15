@@ -225,7 +225,7 @@ namespace hefesto.base_hefesto.Services
             {
                 if (BC.Verify(admUser.Password, user.Password))
                 {
-                    UserVO userVO = new UserVO(user.Id, user.Email, user.Login, user.Name, user.Active);
+                    UserVO userVO = new UserVO(user.Id, user.Email, user.Login, user.Name, (bool)user.Active);
                     SetProperties(admUser.Login, userVO);
                     return true;
                 }

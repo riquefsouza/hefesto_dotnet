@@ -132,7 +132,7 @@ namespace hefesto.admin.VO
 			ProfileVO admProfile = null;
 			foreach (PermissionVO permissaoVO in ListPermission)
 			{
-				if (permissaoVO.Profile.General)
+				if ((bool)permissaoVO.Profile.General)
 				{
 					admProfile = permissaoVO.Profile;
 					break;
@@ -146,7 +146,7 @@ namespace hefesto.admin.VO
 			ProfileVO admProfile = null;
 			foreach (PermissionVO permissaoVO in ListPermission)
 			{
-				if (permissaoVO.Profile.Administrator)
+				if ((bool)permissaoVO.Profile.Administrator)
 				{
 					admProfile = permissaoVO.Profile;
 					break;
@@ -160,7 +160,7 @@ namespace hefesto.admin.VO
 			ProfileVO profile = this.GetProfileGeneral();
 			if (profile != null)
 			{
-				return profile.General;
+				return (bool)profile.General;
 			}
 			return false;
 		}
@@ -170,7 +170,7 @@ namespace hefesto.admin.VO
 			ProfileVO profile = this.GetProfileAdministrator();
 			if (profile != null)
 			{
-				return profile.Administrator;
+				return (bool)profile.Administrator;
 			}
 			return false;
 		}

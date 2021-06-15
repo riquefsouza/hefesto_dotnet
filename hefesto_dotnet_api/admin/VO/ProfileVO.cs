@@ -10,11 +10,11 @@ namespace hefesto.admin.VO
     {
 		public long Id { get; set; }
 
-		public bool Administrator { get; set; }
+		public bool? Administrator { get; set; }
 
 		public string Description { get; set; }
 
-		public bool General { get; set; }
+		public bool? General { get; set; }
 
 		public bool Intersection { get; set; }
 

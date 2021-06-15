@@ -205,9 +205,13 @@ namespace hefesto.admin.Models
                     .ValueGeneratedNever()
                     .HasColumnName("prf_seq");
 
-                entity.Property(e => e.AdministratorChar)
+                entity.Property(e => e.Administrator)
                     .IsRequired()
                     .HasMaxLength(1)
+                    .HasConversion(
+                        v => v.ToString(),
+                        v => v.Equals("S")
+                    )
                     .HasColumnName("prf_administrator")
                     .HasDefaultValueSql("'N'::bpchar");
 
@@ -216,9 +220,13 @@ namespace hefesto.admin.Models
                     .HasMaxLength(255)
                     .HasColumnName("prf_description");
 
-                entity.Property(e => e.GeneralChar)
+                entity.Property(e => e.General)
                     .IsRequired()
                     .HasMaxLength(1)
+                    .HasConversion(
+                        v => v.ToString(),
+                        v => v.Equals("S")
+                    )
                     .HasColumnName("prf_general")
                     .HasDefaultValueSql("'N'::bpchar");
             });
@@ -246,9 +254,13 @@ namespace hefesto.admin.Models
                     .ValueGeneratedNever()
                     .HasColumnName("usu_seq");
 
-                entity.Property(e => e.ActiveChar)
+                entity.Property(e => e.Active)
                     .IsRequired()
                     .HasMaxLength(1)
+                    .HasConversion(
+                        v => v.ToString(),
+                        v => v.Equals("S")
+                    )
                     .HasColumnName("usu_active")
                     .HasDefaultValueSql("'N'::bpchar");
 
