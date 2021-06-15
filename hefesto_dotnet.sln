@@ -12,6 +12,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "hefesto_dotnet_api", "hefes
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "hefesto_dotnet_webapi", "hefesto_dotnet_webapi\hefesto_dotnet_webapi.csproj", "{D69898A4-8A14-4F71-8C60-FFBCF6D00DCF}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "hefesto_dotnet_graphql", "hefesto_dotnet_graphql\hefesto_dotnet_graphql.csproj", "{0501CBCE-F00C-4A22-9030-6ED98094991A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,6 +32,10 @@ Global
 		{D69898A4-8A14-4F71-8C60-FFBCF6D00DCF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D69898A4-8A14-4F71-8C60-FFBCF6D00DCF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D69898A4-8A14-4F71-8C60-FFBCF6D00DCF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0501CBCE-F00C-4A22-9030-6ED98094991A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0501CBCE-F00C-4A22-9030-6ED98094991A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0501CBCE-F00C-4A22-9030-6ED98094991A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0501CBCE-F00C-4A22-9030-6ED98094991A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
